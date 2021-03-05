@@ -1,0 +1,11 @@
+.git
+Dockerfile
+docker-compose.yml
+
+hooks/
+platforms/
+node_modules/
+resources/
+plugins/
+
+*.log
