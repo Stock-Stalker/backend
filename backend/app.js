@@ -13,7 +13,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json())
 
-app.use(mainRoutes)
+app.use('/api', mainRoutes)
 
 app.listen(3000)
 
