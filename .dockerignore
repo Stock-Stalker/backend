@@ -9,4 +9,7 @@ node_modules/
 resources/
 plugins/
 
+docs/
+tests/
+test/
 *.log
