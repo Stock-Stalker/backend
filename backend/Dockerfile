@@ -1,13 +1,13 @@
-FROM node:14-alpine
+FROM node:lts-alpine
 
 LABEL decription="Production image for StockStalker backend."
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY backend/package*.json ./
 
 RUN npm ci
 
-COPY . .
+COPY backend .
 
 CMD ["npm", "start"]
