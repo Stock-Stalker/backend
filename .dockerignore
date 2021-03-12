@@ -8,5 +8,6 @@ platforms/
 node_modules/
 resources/
 plugins/
+predictor/StockStalker.ipynb
 
 *.log
