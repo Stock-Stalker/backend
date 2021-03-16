@@ -9,9 +9,9 @@ const isAuth = require('../middleware/isAuth')
 const router = express.Router()
 
 router.post('/signup', [
-  body('username')
-    .isEmail()
-    .normalizeEmail()
+  body('username', 'Please make sure your username is between 4 and 25 characters and contains no special characters.')
+    .isLength({ min: 4, max: 25 })
+    .escape()
     .not()
     .isEmpty(),
   body('password', 'Please make sure your password is between 8 and 25 characters and contains no special characters.')
@@ -22,12 +22,14 @@ router.post('/signup', [
 ], authController.signup)
 
 router.post('/signin', [
-  body('username')
-    .isEmail()
-    .normalizeEmail()
+  body('username', 'Please make sure your username is between 4 and 25 characters and contains no special characters.')
+    .isLength({ min: 4, max: 25 })
+    .escape()
     .not()
     .isEmpty(),
-  body('password')
+  body('password', 'Please make sure your password is between 8 and 25 characters and contains no special characters.')
+    .isLength({ min: 8, max: 25 })
+    .escape()
     .not()
     .isEmpty()
 ], authController.signin)
