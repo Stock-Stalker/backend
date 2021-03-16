@@ -1,8 +1,10 @@
 const express = require('express')
-const mainRoutes = require('./routes/main')
 const mongoose = require('mongoose')
 
+const mainRoutes = require('./routes/main')
 const stockRoutes = require('./routes/stock')
+const authRoutes = require('./routes/auth')
+
 const app = express()
 
 app.use(express.json())
@@ -14,6 +16,7 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use('/api/auth', authRoutes)
 app.use('/api/stock', stockRoutes)
 app.use('/api', mainRoutes)
 
