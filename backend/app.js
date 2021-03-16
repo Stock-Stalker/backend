@@ -1,5 +1,4 @@
 const path = require('path')
-require('dotenv').config({path: path.join(__dirname,'/../.env')})
 const express = require('express')
 const bodyParser = require('body-parser')
 const mainRoutes = require('./routes/main')
@@ -17,8 +16,9 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json())
 
-app.use('/api', mainRoutes)
 app.use('/api/stock',stockRoutes)
+app.use('/api', mainRoutes)
+
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => {
