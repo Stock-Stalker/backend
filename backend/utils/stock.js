@@ -55,7 +55,7 @@ const getCompanyName = (symbol) => new Promise((resolve, reject) => {
   })
   .then((data) => {
     if (!data) {
-      throw new Error('Connot Find The Company or Symbol')
+      throw new Error('Cannot Find The Company or Symbol')
     }
     const symbol = data.symbol
     const companyName = data.companyName
@@ -68,5 +68,5 @@ const getCompanyName = (symbol) => new Promise((resolve, reject) => {
 
 module.exports = {
   getCompanyName,
-  getHistoricalData,
+  getHistoricalData
 }
