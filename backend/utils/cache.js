@@ -4,24 +4,15 @@ const client = redis.createClient({
   host: 'cache'
 })
 
-const isCacheDataValid = symbol => {
-  client.get(`${symbol}_EX`, (err, data) => {
+const getCompanyNameFromCache = symbol => {
+  client.get(symbol, (err, companyName) => {
     if (err) throw err
-    if (data === null) return false
-    return true
-  })
-}
-
-const getHistoricalDataFromCache = symbol => {
-  client.hget(symbol, (err, stockData) => {
-    if (err) throw err
-    if (stockData === null) return null
-    return stockData
+    if (companyName === null) return null
+    return companyName
   })
 }
 
 module.exports = {
   client,
-  isCacheDataValid,
-  getHistoricalDataFromCache
+  getCompanyNameFromCache
 }
