@@ -1,4 +1,5 @@
 const axios = require('axios')
+const Symbols = require('../models/symbols');
 
 const getCurrentTime = () => {
   /*  return the current time in yyyy-mm-dd hh:mm:ss format */
@@ -53,7 +54,26 @@ const getHistoricalData = (symbol) => new Promise((resolve, reject) => {
     .catch((error) => reject(error))
 })
 
+const checkSymbol = (symbol)=> new Promise((resolve, reject) => {
+  /* check if the symbol or company input is valid
+     Input: stock symbol or company, case insensitive
+     Output: {symbol,companyName} */
+  Symbols.findOne({
+    $or: [{symbol:{ $regex: new RegExp("^" + symbol.toUpperCase(), "i") },
+  },{ companyName:{$regex: new RegExp("^" + symbol.toLowerCase(), "i")}}]
+  })
+  .then((data)=>{
+    if(!data){
+      throw new Error('Connot Find The Company or Symbol')
+    }
+      resolve({symbol:data.symbol,companyName:data.companyName})
+  }).catch((err)=>{
+    reject(err)
+  })
+})
+
 module.exports = {
   getCompanyName,
-  getHistoricalData
+  getHistoricalData,
+  checkSymbol
 }
