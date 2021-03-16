@@ -57,7 +57,10 @@ const getCompanyName = (symbol) => new Promise((resolve, reject) => {
     if (!data) {
       throw new Error('Connot Find The Company or Symbol')
     }
-    resolve({companyName: data.companyName})
+    const symbol = data.symbol
+    const companyName = data.companyName
+    client.setex(symbol, 3600, companyName)
+    resolve(companyName)
   }).catch((err) => {
     reject(err)
   })
