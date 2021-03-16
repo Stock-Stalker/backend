@@ -12,4 +12,8 @@ plugins/
 docs/
 tests/
 test/
+
+utils/get_data.py
+utils/djia_news.csv
+
 *.log
