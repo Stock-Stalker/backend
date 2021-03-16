@@ -4,7 +4,7 @@ const { getCompanyNameFromCache } = require('../utils/cache')
 exports.getStockData = async (req, res) => {
   const symbol = req.params.symbol.toUpperCase()
   try {
-    const companyName = await getCompanyNameFromCache(symbol) || await getCompanyName(symbol) // will be changed to get from mongo
+    const companyName = await getCompanyNameFromCache(symbol) || await getCompanyName(symbol)
     const historicalData = await getHistoricalData(symbol)
     const stockData = {
       symbol,
