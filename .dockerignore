@@ -13,8 +13,5 @@ docs/
 tests/
 test/
 
-predictor/utils/djia_news.csv
-predictor/utils/nasdaq.csv
-predictor/utils/nasdaqlisted.csv
-
+*.csv
 *.log
