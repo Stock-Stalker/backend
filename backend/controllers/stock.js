@@ -53,22 +53,32 @@ const getHistoricalData = (symbol) => new Promise((resolve, reject) => {
             `end_date=${getCurrentTime()}&`+
             `apikey=${process.env.STOCK_DATA_API}`)
     .then((response) => {
+      const historical = response.data.values
+      for (const element of historical) {
+        element.date = element.datetime;
+        delete element.datetime;
+        delete element.volume;
+      }
       resolve(response.data.values)})
     .catch((error) => reject(error));
 });
+
 
 /* ******************** */
 //      Controllers     *
 /* ******************** */
 
+
+
 exports.getStock = (req,res) =>{
   Promise.all([getCompanyName(req.params.symbol),
                getHistoricalData(req.params.symbol)]).then(([name,historicalData]) => {
-    const stockData = { 'symbol':req.params.symbol,
-                        'name':name,
-                        'current_price':historicalData[0].close,
-                        'historical_data':historicalData}
-    res.send({ stockData })
+
+    const response = { 'symbol':req.params.symbol,
+                        'companyName':name,
+                        'curPrice':historicalData[0].close,
+                        'historical':historicalData}
+    res.send({ response })
   })
   .catch((err)=>{
     console.log(err)
