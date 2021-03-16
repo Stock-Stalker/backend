@@ -430,11 +430,6 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 
-# data
-predictor/utils/djia_news.csv
-predictor/utils/nasdaq.csv
-predictor/utils/nasdaqlisted.csv
-
 ### react ###
 .DS_*
 *.log
