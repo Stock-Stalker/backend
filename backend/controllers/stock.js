@@ -1,4 +1,4 @@
-const { getCompanyName, getHistoricalData, checkSymbol } = require('../utils/stock')
+const { getCompanyName, getHistoricalData } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
 
 exports.getStockData = async (req, res) => {

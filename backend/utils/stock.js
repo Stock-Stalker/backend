@@ -28,19 +28,6 @@ const getLastYearTime = () => {
   return (year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds)
 }
 
-const getCompanyName = (symbol) => new Promise((resolve, reject) => {
-  /* Returns Company Name
-     Input: stock symbol
-     Output: Company Name */
-  axios.get(`https://api.twelvedata.com/stocks?symbol=${symbol}`) // Making an API call from twelvedata to get company name
-    .then((response) => {
-      const companyName = response.data.data[0].name
-      client.setex(symbol, 3600, companyName)
-      resolve(companyName)
-    })
-    .catch((error) => reject(error))
-})
-
 const getHistoricalData = (symbol) => new Promise((resolve, reject) => {
   /* Returns the historical stock data
      Input: stock symbol
@@ -58,7 +45,7 @@ const getHistoricalData = (symbol) => new Promise((resolve, reject) => {
     .catch((error) => reject(error))
 })
 
-const checkSymbol = (symbol) => new Promise((resolve, reject) => {
+const getCompanyName = (symbol) => new Promise((resolve, reject) => {
   /* check if the symbol or company input is valid
      Input: stock symbol or company, case insensitive
      Output: {symbol,companyName} */
@@ -70,7 +57,7 @@ const checkSymbol = (symbol) => new Promise((resolve, reject) => {
     if (!data) {
       throw new Error('Connot Find The Company or Symbol')
     }
-    resolve({symbol: data.symbol, companyName: data.companyName})
+    resolve({companyName: data.companyName})
   }).catch((err) => {
     reject(err)
   })
@@ -79,5 +66,4 @@ const checkSymbol = (symbol) => new Promise((resolve, reject) => {
 module.exports = {
   getCompanyName,
   getHistoricalData,
-  checkSymbol
 }
