@@ -34,6 +34,7 @@ const getCompanyName = (symbol) => new Promise((resolve, reject) => {
   axios.get(`https://api.twelvedata.com/stocks?symbol=${symbol}`) // Making an API call from twelvedata to get company name
     .then((response) => {
       const companyName = response.data.data[0].name
+      client.setex(symbol, 3600, companyName)
       resolve(companyName)
     })
     .catch((error) => reject(error))
@@ -51,11 +52,6 @@ const getHistoricalData = (symbol) => new Promise((resolve, reject) => {
             `apikey=${process.env.STOCK_DATA_API}`)
     .then((response) => {
       const stockData = response.data.values
-      // client.setex(`${symbol}_EX`, 60, symbol)
-      for (const data of stockData) {
-        console.log(data)
-        // client.hset(symbol, stockData)
-      }
       resolve(stockData)
     })
     .catch((error) => reject(error))
