@@ -1,6 +1,8 @@
-.git
+.git*
+.github*
 Dockerfile*
 docker-compose*.yml
+Makefile
 README.md
 
 hooks/
@@ -9,7 +11,16 @@ node_modules/
 resources/
 plugins/
 
+
+__pycache__/
 docs/
 tests/
 test/
+
+utils/get_data.py
+*.csv
 *.log
+*.toml
+
+.eslint*
+.prettier*
