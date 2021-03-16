@@ -17,6 +17,7 @@ docs/
 tests/
 test/
 
+utils/get_data.py
 *.csv
 *.log
 *.toml
