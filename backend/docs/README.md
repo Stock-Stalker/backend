@@ -50,7 +50,9 @@ An unsuccessful request, for any reason (such as the database connection times o
 
 **Request**:
 
-url: "/stock/:symbol"
+url: "/stocks/:symbol"
+
+method: GET
 
 Where :symbol refers to the unique ticker symbol for a given stock.
 
