@@ -6,11 +6,53 @@
 
 Base url: ```stockstalker.tk/api```
 
+### Get All Stocks
+
+**Request**:
+
+url: "/stocks"
+
+method: GET
+
+**Response**
+
+Success status code: 200
+
+This route returns all names and symbols of the NASDAQ and DOW companies currently supported by StockStalker.
+
+Example response:
+
+```json
+[
+  {
+    "symbol": "AACG",
+    "companyName": "ATA Creativity Global - American Depositary Shares, each representing two common shares"
+  },
+  {
+    "symbol": "AACQ",
+    "companyName": "Artius Acquisition Inc. - Class A Common Stock"
+  },
+  ...
+]
+```
+
+Error status code: 500
+
+An unsuccessful request, for any reason (such as the database connection times out, or there's another server-side issue) will result in an error response:
+
+```json
+{
+  "message": "Connection refused."
+}
+```
+
 ### Searching for Stocks
 
 **Request**:
 
-url: "/stock/:symbol"
+url: "/stocks/:symbol"
+
+method: GET
 
 Where :symbol refers to the unique ticker symbol for a given stock.
 

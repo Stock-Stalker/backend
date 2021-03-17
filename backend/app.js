@@ -18,7 +18,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use('/api/stock', stockRoutes)
+app.use('/api/stocks', stockRoutes)
 app.use('/api/user', authRoutes)
 app.use('/api', mainRoutes)
 
