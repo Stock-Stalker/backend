@@ -5,7 +5,7 @@ const User = require('../models/user')
 
 const { validationResult } = require('express-validator')
 
-exports.signup = (req, res, next) => {
+exports.signUpUser = (req, res) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed.')
@@ -13,34 +13,43 @@ exports.signup = (req, res, next) => {
     error.data = errors.array()
     throw error
   }
-  let user
   const { username, password } = req.body
-  bcrypt.hash(password, 12)
-    .then(hashedPassword => {
-      user = new User({
-        username: username,
+  User
+    .findOne({ username })
+    .then((user) => {
+      if (user) {
+        return res.status(409).json({
+          message: 'User already exists!'
+        })
+      }
+      return bcrypt.hash(password, 12)
+    })
+    .then((hashedPassword) => {
+      const user = new User({
+        username: req.body.username,
         password: hashedPassword
       })
       return user.save()
     })
-    .then(result => {
+    .then((user) => {
       const token = jwt.sign({
         username: user.username,
         userId: user._id.toString()
       }, process.env.SECRET_KEY, {
         expiresIn: '1h'
       })
-      res.status(201).json({ token: token })
+      return res.status(200).json({
+        message: 'Sign up successful!',
+        user: {
+          username: user.username
+        },
+        token
+      })
     })
-    .catch(err => {
-      if (!err.statusCode) {
-        err.statusCode = 500
-      }
-      next(err)
-    })
+    .catch(err => res.status(500).json({ err }))
 }
 
-exports.signin = (req, res, next) => {
+exports.signInUser = (req, res) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed.')
@@ -50,21 +59,22 @@ exports.signin = (req, res, next) => {
   }
   const { username, password } = req.body
   let loadedUser
-  User.findOne({ username })
-    .then(user => {
+  User
+    .findOne({ username })
+    .then((user) => {
       if (!user) {
-        const error = new Error('We could not find a user with that email address.')
-        error.statusCode = 401
-        throw error
+        return res.status(401).json({
+          message: 'User does not exists!'
+        })
       }
       loadedUser = user
       return bcrypt.compare(password, user.password)
     })
-    .then(isEqual => {
+    .then((isEqual) => {
       if (!isEqual) {
-        const error = new Error('Incorrect password')
-        error.statusCode = 401
-        throw error
+        return res.status(401).json({
+          message: 'Incorrect password'
+        })
       }
       const token = jwt.sign({
         username: loadedUser.username,
@@ -72,31 +82,12 @@ exports.signin = (req, res, next) => {
       }, process.env.SECRET_KEY, {
         expiresIn: '1h'
       })
-      res.status(200).json({ token: token })
+      return res.status(200).json({ token })
     })
-    .catch(err => {
-      if (!err.statusCode) {
-        err.statusCode = 500
-      }
-      next(err)
-    })
+    .catch(err => res.status(500).json({ err }))
 }
 
-exports.getUserProfile = (req, res, next) => {
-  User.findById(req.userId)
-    .then(user => {
-      if (!user) {
-        throw new Error('User not found.')
-      }
-      returnUser = {
-        username: user.username
-      }
-      return res.status(200).json(returnUser)
-    })
-    .catch(err => {
-      if (!err.statusCode) {
-        err.statusCode = 500
-      }
-      next(err)
-    })
+exports.signOutUser = (req, res) => {
+  res.clearCookie('nToken')
+  return res.status(200)
 }
