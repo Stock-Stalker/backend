@@ -38,13 +38,15 @@ exports.signUpUser = (req, res) => {
       }, process.env.SECRET_KEY, {
         expiresIn: '1h'
       })
-      return res.status(200).json({
-        message: 'Sign up successful!',
-        user: {
-          username: user.username
-        },
-        token
-      })
+      return res
+        .status(200)
+        .cookie('SSAuth', token, { maxAge: 60 * 60 * 1000, httpOnly: true })
+        .json({
+          message: 'Sign up successful!',
+          user: {
+            username: user.username
+          }
+        })
     })
     .catch(err => res.status(500).json({ err }))
 }
@@ -82,12 +84,15 @@ exports.signInUser = (req, res) => {
       }, process.env.SECRET_KEY, {
         expiresIn: '1h'
       })
-      return res.status(200).json({ token })
+      return res
+        .status(200)
+        .cookie('SSAuth', token, { maxAge: 60 * 60 * 1000, httpOnly: true })
+        .json({ 'message': 'Sign in successful' })
     })
     .catch(err => res.status(500).json({ err }))
 }
 
 exports.signOutUser = (req, res) => {
-  res.clearCookie('nToken')
+  res.clearCookie('SSAuth')
   return res.status(200)
 }
