@@ -1,15 +1,27 @@
-const { getCompanyName, getHistoricalData } = require('../utils/stock')
+const { getCompanyName, getHistoricalData, getAllStockData } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
 
+exports.getAllStocks = async (req,res) => {
+  try {
+    const stockData = await getAllStockData()
+    res.send(stockData)
+  } catch (err) {
+    res.send({ message: err.message })
+  }
+}
 exports.getStockData = async (req, res) => {
   const symbol = req.params.symbol.toUpperCase()
-  const companyName = await getCompanyNameFromCache(symbol) || await getCompanyName(symbol) // will be changed to get from mongo
-  const historicalData = await getHistoricalData(symbol)
-  const stockData = {
-    symbol,
-    companyName,
-    historicalData,
-    'currentPrice': historicalData[0].close
+  try {
+    const companyName = await getCompanyNameFromCache(symbol) || await getCompanyName(symbol)
+    const historicalData = await getHistoricalData(symbol)
+    const stockData = {
+      symbol,
+      companyName,
+      historicalData,
+      'currentPrice': historicalData[0].close
+    }
+    res.send({ stockData })
+  } catch (err) {
+    res.status(404).send({ message: err.message })
   }
-  res.send({ stockData })
 }

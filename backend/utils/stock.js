@@ -1,4 +1,5 @@
 const axios = require('axios')
+const Symbols = require('../models/symbols')
 const { client } = require('../utils/cache')
 
 const getCurrentTime = () => {
@@ -27,19 +28,6 @@ const getLastYearTime = () => {
   return (year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds)
 }
 
-const getCompanyName = (symbol) => new Promise((resolve, reject) => {
-  /* Returns Company Name
-     Input: stock symbol
-     Output: Company Name */
-  axios.get(`https://api.twelvedata.com/stocks?symbol=${symbol}`) // Making an API call from twelvedata to get company name
-    .then((response) => {
-      const companyName = response.data.data[0].name
-      client.setex(symbol, 3600, companyName)
-      resolve(companyName)
-    })
-    .catch((error) => reject(error))
-})
-
 const getHistoricalData = (symbol) => new Promise((resolve, reject) => {
   /* Returns the historical stock data
      Input: stock symbol
@@ -57,7 +45,36 @@ const getHistoricalData = (symbol) => new Promise((resolve, reject) => {
     .catch((error) => reject(error))
 })
 
+const getCompanyName = (symbol) => new Promise((resolve, reject) => {
+  /* check if the symbol or company input is valid
+     Input: stock symbol or company, case insensitive
+     Output: {symbol,companyName} */
+  Symbols.findOne({
+    $or: [{symbol: { $regex: new RegExp('^' + symbol.toUpperCase(), 'i') }
+    }, { companyName: {$regex: new RegExp('^' + symbol.toLowerCase(), 'i')}}]
+  })
+  .then((data) => {
+    if (!data) {
+      throw new Error('Cannot Find The Company or Symbol')
+    }
+    resolve({ companyName: data.companyName })
+  }).catch((err) => {
+    reject(err)
+  })
+})
+
+const getAllStockData = () => new Promise((resolve,reject) => {
+   /* Returns all the stocks' symbol and company name
+     Output: {symbol,companyName} */
+  Symbols.find({},{_id:0})
+  .then((data)=>{
+    resolve(data)
+  })
+  .catch((err)=>reject(err))
+});
+
 module.exports = {
   getCompanyName,
-  getHistoricalData
+  getHistoricalData,
+  getAllStockData
 }
