@@ -1,4 +1,6 @@
 const axios = require('axios')
+const Symbols = require('../models/symbols')
+const { client } = require('../utils/cache')
 
 const getCurrentTime = () => {
   /*  return the current time in yyyy-mm-dd hh:mm:ss format */
@@ -13,7 +15,7 @@ const getCurrentTime = () => {
   return (year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds)
 }
 
-const getLastyearTime = () => {
+const getLastYearTime = () => {
  /*  return the last year time from current time in yyyy-mm-dd hh:mm:ss format */
   const dateOb = new Date()
   const date = ('0' + dateOb.getDate()).slice(-2)
@@ -26,17 +28,6 @@ const getLastyearTime = () => {
   return (year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds)
 }
 
-const getCompanyName = (symbol) => new Promise((resolve, reject) => {
-  /* Returns Company Name
-     Input: stock symbol
-     Output: Company Name */
-  axios.get(`https://api.twelvedata.com/stocks?symbol=${symbol}`) // Making an API call from twelvedata to get company name
-    .then((response) => {
-      resolve(response.data.data[0].name)
-    })
-    .catch((error) => reject(error))
-})
-
 const getHistoricalData = (symbol) => new Promise((resolve, reject) => {
   /* Returns the historical stock data
      Input: stock symbol
@@ -44,16 +35,46 @@ const getHistoricalData = (symbol) => new Promise((resolve, reject) => {
             {"datetime","open,"high","low","close","volume"} */
   axios.get(`https://api.twelvedata.com/time_series?` +
             `symbol=${symbol}&interval=1day&outputsize=365&format=JSON&` +
-            `start_date=${getLastyearTime()}&` +
+            `start_date=${getLastYearTime()}&` +
             `end_date=${getCurrentTime()}&` +
             `apikey=${process.env.STOCK_DATA_API}`)
     .then((response) => {
-      resolve(response.data.values)
+      const stockData = response.data.values
+      resolve(stockData)
     })
     .catch((error) => reject(error))
 })
 
+const getCompanyName = (symbol) => new Promise((resolve, reject) => {
+  /* check if the symbol or company input is valid
+     Input: stock symbol or company, case insensitive
+     Output: {symbol,companyName} */
+  Symbols.findOne({
+    $or: [{symbol: { $regex: new RegExp('^' + symbol.toUpperCase(), 'i') }
+    }, { companyName: {$regex: new RegExp('^' + symbol.toLowerCase(), 'i')}}]
+  })
+  .then((data) => {
+    if (!data) {
+      throw new Error('Cannot Find The Company or Symbol')
+    }
+    resolve({ companyName: data.companyName })
+  }).catch((err) => {
+    reject(err)
+  })
+})
+
+const getAllStockData = () => new Promise((resolve,reject) => {
+   /* Returns all the stocks' symbol and company name
+     Output: {symbol,companyName} */
+  Symbols.find({},{_id:0})
+  .then((data)=>{
+    resolve(data)
+  })
+  .catch((err)=>reject(err))
+});
+
 module.exports = {
   getCompanyName,
-  getHistoricalData
+  getHistoricalData,
+  getAllStockData
 }
