@@ -36,7 +36,7 @@ describe('Stocks endpoints', function () {
         return done();
       });
   });
-  it('should return error message when enter invalid symbol', (done) => {
+  it('should return status 404 when enter invalid symbol', (done) => {
     agent
       .get('/api/stocks/AAPLLL')
       .end((err, res) => {
@@ -44,7 +44,6 @@ describe('Stocks endpoints', function () {
           return done(err);
         }
         res.status.should.be.equal(404);
-        console.log(res.body)
         return done();
       });
   });
