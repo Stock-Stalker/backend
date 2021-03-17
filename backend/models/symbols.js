@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const Symbols = new Schema({
+const symbolSchema = new Schema({
   symbol: {
     type: String,
     required: true
@@ -13,4 +13,4 @@ const Symbols = new Schema({
   }
 })
 
-module.exports = mongoose.model('Symbols', Symbols)
+module.exports = mongoose.model('Symbols', symbolSchema)
