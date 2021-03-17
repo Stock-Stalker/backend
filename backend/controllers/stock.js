@@ -1,6 +1,14 @@
-const { getCompanyName, getHistoricalData } = require('../utils/stock')
+const { getCompanyName, getHistoricalData, getAllStockData } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
 
+exports.getAllStocks = async (req,res) => {
+  try {
+    const stockData = await getAllStockData()
+    res.send(stockData)
+  } catch (err) {
+    res.send({ message: err.message })
+  }
+}
 exports.getStockData = async (req, res) => {
   const symbol = req.params.symbol.toUpperCase()
   try {

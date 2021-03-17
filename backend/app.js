@@ -14,7 +14,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use('/api/stock', stockRoutes)
+app.use('/api/stocks', stockRoutes)
 app.use('/api', mainRoutes)
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })

@@ -66,7 +66,18 @@ const getCompanyName = (symbol) => new Promise((resolve, reject) => {
   })
 })
 
+const getAllStockData = () => new Promise((resolve,reject) => {
+   /* Returns all the stocks' symbol and company name
+     Output: {symbol,companyName} */
+  Symbols.find({},{_id:0})
+  .then((data)=>{
+    resolve(data)
+  })
+  .catch((err)=>reject(err))
+});
+
 module.exports = {
   getCompanyName,
-  getHistoricalData
+  getHistoricalData,
+  getAllStockData
 }
