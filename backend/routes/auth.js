@@ -19,7 +19,7 @@ router.post('/signup', [
     .escape()
     .not()
     .isEmpty()
-], authController.signup)
+], authController.signUpUser)
 
 router.post('/signin', [
   body('username', 'Please make sure your username is between 4 and 25 characters and contains no special characters.')
@@ -32,8 +32,8 @@ router.post('/signin', [
     .escape()
     .not()
     .isEmpty()
-], authController.signin)
+], authController.signInUser)
 
-router.get('/', isAuth, authController.getUserProfile)
+router.get('/signout', isAuth, authController.signOutUser)
 
 module.exports = router
