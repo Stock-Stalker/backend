@@ -28,33 +28,33 @@ const getLastYearTime = () => {
     return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`
 }
 
-const getHistoricalData = (symbol) =>
-    new Promise((resolve, reject) => {
-        /* Returns the historical stock data
+const getHistoricalData = async (symbol) => {
+    /* Returns the historical stock data
      Input: stock symbol
      Output: a list historical data
             {"datetime","open,"high","low","close","volume"} */
-        axios
-            .get(
-                'https://api.twelvedata.com/time_series?' +
-                    `symbol=${symbol}&interval=1day&outputsize=365&format=JSON&` +
-                    `start_date=${getLastYearTime()}&` +
-                    `end_date=${getCurrentTime()}&` +
-                    `apikey=${process.env.STOCK_DATA_API}`
-            )
-            .then((response) => {
-                const stockData = response.data.values
-                resolve(stockData)
-            })
-            .catch((error) => reject(error))
-    })
+    try {
+        const res = await axios.get(
+            'https://api.twelvedata.com/time_series?' +
+                `symbol=${symbol}&interval=1day&outputsize=365&format=JSON&` +
+                `start_date=${getLastYearTime()}&` +
+                `end_date=${getCurrentTime()}&` +
+                `apikey=${process.env.STOCK_DATA_API}`
+        )
+        const stockData = res.data.values
+        return stockData
+    } catch (err) {
+        console.log(err)
+        throw err
+    }
+}
 
-const getCompanyName = (symbol) =>
-    new Promise((resolve, reject) => {
-        /* check if the symbol or company input is valid
-     Input: stock symbol or company, case insensitive
-     Output: {symbol,companyName} */
-        Symbols.findOne({
+const getCompanyName = async (symbol) => {
+    /* check if the symbol or company input is valid
+    Input: stock symbol or company, case insensitive
+    Output: {symbol,companyName} */
+    try {
+        const company = await Symbols.findOne({
             $or: [
                 {
                     symbol: {
@@ -68,27 +68,27 @@ const getCompanyName = (symbol) =>
                 }
             ]
         })
-            .then((data) => {
-                if (!data) {
-                    throw new Error('Cannot Find The Company or Symbol')
-                }
-                resolve(data.companyName)
-            })
-            .catch((err) => {
-                reject(err)
-            })
-    })
+        if (!company) {
+            throw new Error(`Cannot find ${symbol}`)
+        }
+        return company.companyName
+    } catch (err) {
+        console.log(err)
+        throw err
+    }
+}
 
-const getAllStockData = () =>
-    new Promise((resolve, reject) => {
-        /* Returns all the stocks' symbol and company name
+const getAllStockData = async () => {
+    /* Returns all the stocks' symbol and company name
      Output: {symbol,companyName} */
-        Symbols.find({}, { _id: 0 })
-            .then((data) => {
-                resolve(data)
-            })
-            .catch((err) => reject(err))
-    })
+    try {
+        const company = await Symbols.find({}, { _id: 0 })
+        return company
+    } catch (err) {
+        console.log(err)
+        throw err
+    }
+}
 
 module.exports = {
     getCompanyName,
