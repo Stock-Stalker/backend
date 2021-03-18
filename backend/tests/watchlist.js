@@ -42,53 +42,27 @@ describe('Authentication API endpoints', function () {
                     done(err)
                 }
                 sampleUser.save()
-                token = res.token
                 done()
             })
     })
 
     // Delete sample user.
     afterEach(function (done) {
-        User.deleteMany({
-            username: ['myuser', 'anotheruser', 'mynewusername'],
-        }).then(function () {
+        User.deleteMany({ username: 'myuser' }).then(function () {
             done()
         })
     })
 
-    it('should sign up a new user', function (done) {
+    it('should get all stock data in users watchlist', function (done) {
         chai.request(app)
-            .post('/api/user/signup')
-            .send({ username: 'anotheruser', password: 'mypassword' })
+            .post('/api/user/watchlist')
             .end(function (err, res) {
                 if (err) {
                     done(err)
                 }
-                expect(res.body.user).to.be.an('object')
-                expect(res.body.user).to.have.property(
-                    'username',
-                    'anotheruser'
-                )
-                expect(res).to.have.cookie('SSAuth')
-                // check that user is actually inserted into database
-                User.findOne({ username: 'anotheruser' }).then(function (user) {
-                    expect(user).to.be.an('object')
-                    done()
-                })
-            })
-    })
-
-    it('should sign in a user', function (done) {
-        chai.request(app)
-            .post('/api/user/signin')
-            .send({ username: 'myuser', password: 'mypassword' })
-            .end(function (err, res) {
-                if (err) {
-                    done(err)
-                }
-                expect(res).to.have.status(200)
-                expect(res).to.have.cookie('SSAuth')
-                done()
+                console.log(`!!!!!! ${res.body}`)
+                expect(res.body).to.be.an('Array')
+                // expect(res.body.user).to.have.property('username', 'anotheruser');
             })
     })
 })
