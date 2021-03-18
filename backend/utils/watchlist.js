@@ -1,11 +1,15 @@
 const User = require('../models/user')
 const Symbols = require('../models/symbols')
 
-const getStock = (symbol) => new Promise ((resolve, reject) => {
-  Symbols.findOne({symbol: symbol})
-    .then((stock) => resolve(stock))
-    .catch((error) => reject(error))
-})
+const getStock = async (symbol) => {
+  try {
+    const stock = await Symbols.findOne({symbol: symbol})
+    return stock
+  } catch (error) {
+    return error.message
+  }
+}
+
 const getUser = async (userId) => {
   try {
     const user = await User.findOne({ _id: userId })

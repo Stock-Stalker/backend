@@ -8,7 +8,8 @@ const isAuth = require('../middleware/isAuth')
 
 router.get('/',isAuth, watchlistController.getwatchlist)
 
-router.patch('/:symbol',isAuth, watchlistController.addToWatchlist)
+router.patch('/',isAuth, watchlistController.addToWatchlist)
+
 router.patch('/remove/:symbol',isAuth, watchlistController.removeFromWatchlist)
 
 module.exports = router
