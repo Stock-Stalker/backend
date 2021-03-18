@@ -51,8 +51,8 @@ const getHistoricalData = async (symbol) => {
 
 const getCompanyName = async (symbol) => {
     /* check if the symbol or company input is valid
-     Input: stock symbol or company, case insensitive
-     Output: {symbol,companyName} */
+    Input: stock symbol or company, case insensitive
+    Output: {symbol,companyName} */
     try {
         const company = await Symbols.findOne({
             $or: [
@@ -82,8 +82,8 @@ const getAllStockData = async () => {
     /* Returns all the stocks' symbol and company name
      Output: {symbol,companyName} */
     try {
-        const symbols = await Symbols.find({}, { _id: 0 })
-        return symbols
+        const companies = await Symbols.find({}, { _id: 0 })
+        return companies
     } catch (err) {
         console.log(err)
         throw err
