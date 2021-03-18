@@ -1,7 +1,7 @@
 const redis = require('redis')
 
 const client = redis.createClient({
-    host: 'cache',
+    host: 'cache'
 })
 
 const getCompanyNameFromCache = (symbol) => {
@@ -15,5 +15,5 @@ const getCompanyNameFromCache = (symbol) => {
 
 module.exports = {
     client,
-    getCompanyNameFromCache,
+    getCompanyNameFromCache
 }

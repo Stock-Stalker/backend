@@ -58,15 +58,15 @@ const getCompanyName = (symbol) =>
             $or: [
                 {
                     symbol: {
-                        $regex: new RegExp('^' + symbol.toUpperCase(), 'i'),
-                    },
+                        $regex: new RegExp('^' + symbol.toUpperCase(), 'i')
+                    }
                 },
                 {
                     companyName: {
-                        $regex: new RegExp('^' + symbol.toLowerCase(), 'i'),
-                    },
-                },
-            ],
+                        $regex: new RegExp('^' + symbol.toLowerCase(), 'i')
+                    }
+                }
+            ]
         })
             .then((data) => {
                 if (!data) {
@@ -93,5 +93,5 @@ const getAllStockData = () =>
 module.exports = {
     getCompanyName,
     getHistoricalData,
-    getAllStockData,
+    getAllStockData
 }

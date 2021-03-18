@@ -32,7 +32,7 @@ app.use('/api', mainRoutes)
 mongoose
     .connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
-        useUnifiedTopology: true,
+        useUnifiedTopology: true
     })
     .then((result) => {
         console.log('CONNECTED')

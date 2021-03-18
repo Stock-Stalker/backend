@@ -31,5 +31,5 @@ const checkDuplicate = (stockId, watchlist) => {
 module.exports = {
     getStock,
     getUser,
-    checkDuplicate,
+    checkDuplicate
 }

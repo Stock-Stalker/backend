@@ -1,7 +1,7 @@
 const {
     getCompanyName,
     getHistoricalData,
-    getAllStockData,
+    getAllStockData
 } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
 
@@ -24,7 +24,7 @@ exports.getStockData = async (req, res) => {
             symbol,
             companyName,
             historicalData,
-            currentPrice: historicalData[0].close,
+            currentPrice: historicalData[0].close
         }
         res.send({ stockData })
     } catch (err) {

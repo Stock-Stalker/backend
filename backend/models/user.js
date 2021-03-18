@@ -6,17 +6,17 @@ const userSchema = new Schema(
     {
         username: {
             type: String,
-            required: true,
+            required: true
         },
         password: {
             type: String,
-            required: true,
+            required: true
         },
         watchlist: [
             {
-                id: { type: Schema.Types.ObjectId, ref: 'Symbols' },
-            },
-        ],
+                id: { type: Schema.Types.ObjectId, ref: 'Symbols' }
+            }
+        ]
     },
     { timestamps: true }
 )

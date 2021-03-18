@@ -29,7 +29,7 @@ exports.addToWatchlist = async (req, res) => {
 exports.removeFromWatchlist = async (req, res) => {
     try {
         const symbolToRemove = await Symbols.findOne({
-            symbol: req.params.symbol,
+            symbol: req.params.symbol
         })
         const symbolID = symbolToRemove._id
         const updatedUser = await User.findByIdAndUpdate(
