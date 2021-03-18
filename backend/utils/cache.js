@@ -4,7 +4,7 @@ const client = redis.createClient({
   host: 'cache'
 })
 
-const getCompanyNameFromCache = symbol => {
+const getCompanyNameFromCache = (symbol) => {
   client.get(symbol, (err, companyName) => {
     if (err) throw err
     if (companyName === null) return null

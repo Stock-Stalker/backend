@@ -14,8 +14,7 @@ exports.signUpUser = (req, res) => {
     throw error
   }
   const { username, password } = req.body
-  User
-    .findOne({ username })
+  User.findOne({ username })
     .then((user) => {
       if (user) {
         return res.status(409).json({
@@ -32,15 +31,22 @@ exports.signUpUser = (req, res) => {
       return user.save()
     })
     .then((user) => {
-      const token = jwt.sign({
-        username: user.username,
-        userId: user._id.toString()
-      }, process.env.SECRET_KEY, {
-        expiresIn: '1h'
-      })
+      const token = jwt.sign(
+        {
+          username: user.username,
+          userId: user._id.toString()
+        },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: '1h'
+        }
+      )
       return res
         .status(200)
-        .cookie('SSAuth', token, { maxAge: 60 * 60 * 1000, httpOnly: true })
+        .cookie('SSAuth', token, {
+          maxAge: 60 * 60 * 1000,
+          httpOnly: true
+        })
         .json({
           message: 'Sign up successful!',
           user: {
@@ -48,7 +54,7 @@ exports.signUpUser = (req, res) => {
           }
         })
     })
-    .catch(err => res.status(500).json({ err }))
+    .catch((err) => res.status(500).json({ err }))
 }
 
 exports.signInUser = (req, res) => {
@@ -61,8 +67,7 @@ exports.signInUser = (req, res) => {
   }
   const { username, password } = req.body
   let loadedUser
-  User
-    .findOne({ username })
+  User.findOne({ username })
     .then((user) => {
       if (!user) {
         return res.status(401).json({
@@ -78,21 +83,28 @@ exports.signInUser = (req, res) => {
           message: 'Incorrect password'
         })
       }
-      const token = jwt.sign({
-        username: loadedUser.username,
-        userId: loadedUser._id.toString()
-      }, process.env.SECRET_KEY, {
-        expiresIn: '1h'
-      })
+      const token = jwt.sign(
+        {
+          username: loadedUser.username,
+          userId: loadedUser._id.toString()
+        },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: '1h'
+        }
+      )
       return res
         .status(200)
-        .cookie('SSAuth', token, { maxAge: 60 * 60 * 1000, httpOnly: true })
-        .json({ 'message': 'Sign in successful' })
+        .cookie('SSAuth', token, {
+          maxAge: 60 * 60 * 1000,
+          httpOnly: true
+        })
+        .json({ message: 'Sign in successful' })
     })
-    .catch(err => res.status(500).json({ err }))
+    .catch((err) => res.status(500).json({ err }))
 }
 
 exports.signOutUser = (req, res) => {
   res.clearCookie('SSAuth')
-  return res.status(200).json({ message: "Successfully signed out" })
+  return res.status(200).json({ message: 'Successfully signed out' })
 }
