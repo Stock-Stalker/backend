@@ -54,6 +54,4 @@ router.post(
   authController.signInUser
 )
 
-router.get('/signout', isAuth, authController.signOutUser)
-
 module.exports = router

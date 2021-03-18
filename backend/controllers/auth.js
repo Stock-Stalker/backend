@@ -96,8 +96,3 @@ exports.signInUser = (req, res) => {
     })
     .catch((err) => res.status(500).json({ err }))
 }
-
-exports.signOutUser = (req, res) => {
-  res.clearCookie('SSAuth')
-  return res.status(200).json({ message: 'Successfully signed out' })
-}
