@@ -18,31 +18,31 @@ exports.signUpUser = async (req, res) => {
         let user = await User.findOne({ username })
         if (user) {
             return res.status(409).json({
-                message: 'User already exists!'
+                message: 'User already exists!',
             })
         }
         const hashedPassword = bcrypt.hash(password, 12)
         user = new User({
             username: req.body.username,
-            password: hashedPassword
+            password: hashedPassword,
         })
         await user.save()
         const token = jwt.sign(
             {
                 username: user.username,
-                userId: user._id.toString()
+                userId: user._id.toString(),
             },
             process.env.SECRET_KEY,
             {
-                expiresIn: '1h'
+                expiresIn: '1h',
             }
         )
         return res.status(200).json({
             message: 'Sign up successful!',
             user: {
-                username: user.username
+                username: user.username,
             },
-            token: token
+            token: token,
         })
     } catch (err) {
         return res.status(500).json({ err })
@@ -62,23 +62,23 @@ exports.signInUser = async (req, res) => {
         const user = await User.findOne({ username })
         if (!user) {
             return res.status(401).json({
-                message: 'User does not exist!'
+                message: 'User does not exist!',
             })
         }
         const isEqual = bcrypt.compare(password, user.password)
         if (!isEqual) {
             return res.status(401).json({
-                message: 'Incorrect password'
+                message: 'Incorrect password',
             })
         }
         const token = jwt.sign(
             {
                 username: user.username,
-                userId: user._id.toString()
+                userId: user._id.toString(),
             },
             process.env.SECRET_KEY,
             {
-                expiresIn: '1h'
+                expiresIn: '1h',
             }
         )
         return res
