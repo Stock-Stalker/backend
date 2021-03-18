@@ -34,7 +34,7 @@ const getHistoricalData = async (symbol) => {
      Output: a list historical data
             {"datetime","open,"high","low","close","volume"} */
     try {
-        const res = axios.get(
+        const res = await axios.get(
             'https://api.twelvedata.com/time_series?' +
                 `symbol=${symbol}&interval=1day&outputsize=365&format=JSON&` +
                 `start_date=${getLastYearTime()}&` +
