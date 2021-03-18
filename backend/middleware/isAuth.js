@@ -1,12 +1,16 @@
 const jwt = require('jsonwebtoken')
 
 module.exports = (req, res, next) => {
-  const token = req.cookies.SSAuth
-  if (!token) {
+  // Expect Authorization header to look as follows:
+  // Bearer <token>
+  const authHeader = req.get('Authorization')
+  if (!authHeader) {
     const err = new Error('Not authenticated.')
     err.statusCode = 401
     throw err
   }
+  // Get the token part of the auth header
+  const token = authHeader.split(' ')[1]
   let decodedToken
   try {
     decodedToken = jwt.verify(token, process.env.SECRET_KEY)

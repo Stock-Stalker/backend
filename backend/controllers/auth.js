@@ -43,15 +43,12 @@ exports.signUpUser = (req, res) => {
       )
       return res
         .status(200)
-        .cookie('SSAuth', token, {
-          maxAge: 60 * 60 * 1000,
-          httpOnly: true
-        })
         .json({
           message: 'Sign up successful!',
           user: {
             username: user.username
-          }
+          },
+          token: token
         })
     })
     .catch((err) => res.status(500).json({ err }))
@@ -95,11 +92,7 @@ exports.signInUser = (req, res) => {
       )
       return res
         .status(200)
-        .cookie('SSAuth', token, {
-          maxAge: 60 * 60 * 1000,
-          httpOnly: true
-        })
-        .json({ message: 'Sign in successful' })
+        .json({ message: 'Sign in successful', token: token })
     })
     .catch((err) => res.status(500).json({ err }))
 }
