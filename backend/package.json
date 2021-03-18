@@ -7,7 +7,9 @@
         "test": "mocha ./tests/*.js",
         "start": "node app.js",
         "dev": "nodemon app.js",
-        "format": "prettier --write \"{*, utils, tests, routes, models, middleware, controllers}/*.js\" && prettier --write ./app.js"
+        "format": "prettier --write \"{utils,tests,routes,models,middleware,controllers}/*.js\" && prettier --write ./app.js",
+        "lint-files": "eslint --fix \"{utils,routes,models,middleware,controllers}/*.js\" && eslint --fix ./app.js",
+        "lint": "npm run format && npm run lint-files"
     },
     "author": "",
     "license": "MIT",
@@ -24,7 +26,7 @@
     "devDependencies": {
         "chai": "^4.3.4",
         "chai-http": "^4.3.0",
-        "eslint": "^7.21.0",
+        "eslint": "^7.22.0",
         "eslint-config-prettier": "^8.1.0",
         "eslint-config-standard": "^16.0.2",
         "eslint-plugin-import": "^2.22.1",
