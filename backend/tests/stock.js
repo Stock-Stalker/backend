@@ -24,11 +24,13 @@ describe('Stocks endpoints', function () {
 
   it('should get the stock data', function (done) {
     agent
-      .get('/api/stocks/AAPL')
+      .get('/api/stocks/DDOG')
       .end((err, res) => {
         if (err) {
           return done(err)
         }
+        console.log(`@@@@@@@@@@@@@ ${res.body}`)
+        console.log(`@@@@@@@@@@@@@ ${JSON.stringify(res.body)}`)
         res.status.should.be.equal(200)
         expect(res.body).to.be.an('Object')
         expect(res.body.stockData.historicalData).to.be.an('array')
