@@ -21,7 +21,7 @@ describe('Stocks endpoints', function () {
         return done();
       });
   });
-  it('should get the stock data', (done) => {
+  it('should get the stock data',function (done) {
     agent
       .get('/api/stocks/AAPL')
       .end((err, res) => {
@@ -36,7 +36,7 @@ describe('Stocks endpoints', function () {
         return done();
       });
   });
-  it('should return status 404 when enter invalid symbol', (done) => {
+  it('should return status 404 when enter invalid symbol', function (done) {
     agent
       .get('/api/stocks/AAPLLL')
       .end((err, res) => {
