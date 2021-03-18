@@ -33,8 +33,7 @@ exports.removeFromWatchlist = (req,res) =>{
     return User.findByIdAndUpdate(req.userId,
       { $pull: {watchlist:symbolID}},{new: true}).populate('watchlist')
   }).then((updatedUser) =>{ 
-      console.log(updatedUser);
-      res.status(200).send(updatedUser);
+      res.status(200).send(updatedUser.watchlist);
   }).catch((err) =>{
     res.status(403).send({ message: err.message })
   })
