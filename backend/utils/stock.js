@@ -82,8 +82,8 @@ const getAllStockData = async () => {
     /* Returns all the stocks' symbol and company name
      Output: {symbol,companyName} */
     try {
-        const company = await Symbols.find({}, { _id: 0 })
-        return company
+        const companies = await Symbols.find({}, { _id: 0 })
+        return companies
     } catch (err) {
         console.log(err)
         throw err
