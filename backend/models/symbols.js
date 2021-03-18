@@ -5,7 +5,8 @@ const Schema = mongoose.Schema
 const symbolSchema = new Schema({
   symbol: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   companyName: {
     type: String,
