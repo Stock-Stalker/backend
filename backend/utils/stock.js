@@ -12,7 +12,7 @@ const getCurrentTime = () => {
   const minutes = ('0' + (dateOb.getMinutes())).slice(-2)
   const seconds = ('0' + (dateOb.getSeconds())).slice(-2)
 
-  return (`${year}-${month}-${date} ${hours}:${minutes}:${seconds}`)
+  return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`
 }
 
 const getLastYearTime = () => {
@@ -25,7 +25,7 @@ const getLastYearTime = () => {
   const minutes = ('0' + (dateOb.getMinutes())).slice(-2)
   const seconds = ('0' + (dateOb.getSeconds())).slice(-2)
 
-  return (`${year}-${month}-${date} ${hours}:${minutes}:${seconds}`)
+  return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`
 }
 
 const getHistoricalData = (symbol) => new Promise((resolve, reject) => {
