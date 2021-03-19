@@ -61,8 +61,6 @@ describe('Authentication API endpoints', function () {
             .post('/api/user/signup')
             .send({ username: 'anotheruser', password: 'mypassword' })
             .end(function (err, res) {
-                console.log(`@@@@@@ in signup test ${JSON.stringify(res)}`)
-                console.log(`@@@@@@ in signup test ${JSON.stringify(res.body)}`)
                 if (err) {
                     done(err)
                 }

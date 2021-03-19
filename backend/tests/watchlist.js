@@ -63,7 +63,6 @@ describe('Watchlist API endpoints', function () {
                 if (err) {
                     done(err)
                 }
-                console.log(`!!!!!! ${res.body}`)
                 expect(res.body).to.be.an('Array')
                 expect(res.body.user).to.have.property('username', 'anotheruser');
             })
