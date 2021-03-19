@@ -1,8 +1,8 @@
-const { getStock, getUser, AddSymbol } = require('../utils/watchlist')
+const { getStock, getUser } = require('../utils/watchlist')
 const User = require('../models/user')
 const Symbols = require('../models/symbols')
 
-exports.getwatchlist = async (req, res) => {
+exports.getWatchlist = async (req, res) => {
     try {
         const user = await getUser(req.userId)
         res.send(user.watchlist)

@@ -32,7 +32,7 @@ describe('Watchlist API endpoints', function () {
             username: 'myuser',
             password: 'mypassword',
             watchlist: [],
-            _id: SAMPLE_OBJECT_ID
+            _id: SAMPLE_OBJECT_ID,
         })
         chai.request(app)
             .post('/api/user/signup')
@@ -48,11 +48,13 @@ describe('Watchlist API endpoints', function () {
                     .then(function (res) {
                         console.log(res.body)
                         done()
-                    }).catch(function (err) {
+                    })
+                    .catch(function (err) {
                         console.log(err)
                         done()
                     })
-            }).catch(function (err) {
+            })
+            .catch(function (err) {
                 console.log(err)
                 done()
             })
@@ -81,17 +83,22 @@ describe('Watchlist API endpoints', function () {
                             .get('/api/user/watchlist')
                             .set('Authorization', `Bearer ${token}`)
                             .then(function (res) {
-                                expect(res.body.length).to.be.equal(initialCount + 1)
+                                expect(res.body.length).to.be.equal(
+                                    initialCount + 1
+                                )
                                 done()
-                            }).catch(function (err) {
+                            })
+                            .catch(function (err) {
                                 console.log(err)
                                 done()
                             })
-                    }).catch(function (err) {
+                    })
+                    .catch(function (err) {
                         console.log(err)
                         done()
                     })
-            }).catch(function (err) {
+            })
+            .catch(function (err) {
                 console.log(err)
                 done()
             })
@@ -112,17 +119,22 @@ describe('Watchlist API endpoints', function () {
                             .get('/api/user/watchlist')
                             .set('Authorization', `Bearer ${token}`)
                             .then(function (res) {
-                                expect(res.body.length).to.be.equal(initialCount - 1)
+                                expect(res.body.length).to.be.equal(
+                                    initialCount - 1
+                                )
                                 done()
-                            }).catch(function (err) {
+                            })
+                            .catch(function (err) {
                                 console.log(err)
                                 done()
                             })
-                    }).catch(function (err) {
+                    })
+                    .catch(function (err) {
                         console.log(err)
                         done()
                     })
-            }).catch(function (err) {
+            })
+            .catch(function (err) {
                 console.log(err)
                 done()
             })
