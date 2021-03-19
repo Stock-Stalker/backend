@@ -32,7 +32,6 @@ exports.removeFromWatchlist = async (req, res) => {
             symbol: req.body.symbol
         })
         const symbolID = symbolToRemove._id
-        console.log(`symbolId: ${symbolID}`)
         const updatedUser = await User.findByIdAndUpdate(
             req.userId,
             { $pull: { watchlist: { _id: symbolID.toString() } } },
