@@ -21,7 +21,7 @@ exports.signUpUser = async (req, res) => {
                 message: 'User already exists!'
             })
         }
-        const hashedPassword = bcrypt.hash(password, 12)
+        const hashedPassword = await bcrypt.hash(password, 12)
         user = new User({
             username: req.body.username,
             password: hashedPassword

@@ -19,17 +19,7 @@ const getUser = async (userId) => {
     }
 }
 
-const checkDuplicate = (stockId, watchlist) => {
-    for (let i = 0; i < watchlist.length; i++) {
-        if (String(stockId) === String(watchlist[i]._id)) {
-            return true
-        }
-    }
-    return false
-}
-
 module.exports = {
     getStock,
-    getUser,
-    checkDuplicate
+    getUser
 }
