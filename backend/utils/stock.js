@@ -12,11 +12,7 @@ const getCurrentTime = () => {
     const minutes = ('0' + dateOb.getMinutes()).slice(-2)
     const seconds = ('0' + dateOb.getSeconds()).slice(-2)
 
-<<<<<<< HEAD
-  return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`
-=======
-    return `${year}-${month}-${date}  ${hours}:${minutes}:${seconds}`
->>>>>>> 6f715a686043590b0b2fc9bafe19f23eac0599c5
+    return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`
 }
 
 const getLastYearTime = () => {
@@ -29,11 +25,7 @@ const getLastYearTime = () => {
     const minutes = ('0' + dateOb.getMinutes()).slice(-2)
     const seconds = ('0' + dateOb.getSeconds()).slice(-2)
 
-<<<<<<< HEAD
-  return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`
-=======
     return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`
->>>>>>> 6f715a686043590b0b2fc9bafe19f23eac0599c5
 }
 
 const getHistoricalData = async (symbol) => {

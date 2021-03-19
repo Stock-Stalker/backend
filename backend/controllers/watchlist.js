@@ -1,11 +1,12 @@
-const { getStock, getUser, checkDuplicate } = require('../utils/watchlist')
+const { getStock, getUser, AddSymbol } = require('../utils/watchlist')
 const User = require('../models/user')
 const Symbols = require('../models/symbols')
+
 
 exports.getwatchlist = async (req, res) => {
     try {
         const user = await getUser(req.userId)
-        // TODO: populate this so we don't just get the id reference back
+        console.log(user)
         res.send(user.watchlist)
     } catch (err) {
         res.status(403).send({ message: err.message })
@@ -16,11 +17,10 @@ exports.addToWatchlist = async (req, res) => {
     try {
         const user = await getUser(req.userId)
         const stock = await getStock(req.body.symbol)
-        if (!checkDuplicate(stock._id, user.watchlist)) {
-            user.watchlist.unshift(stock)
-        }
-        user.save()
-        res.send(user.watchlist)
+        user.watchlist.addToSet(stock)
+        await user.save()
+        const updatedUser = await getUser(req.userId)
+        res.send(updatedUser.watchlist)
     } catch (err) {
         res.status(403).send({ message: err.message })
     }
