@@ -25,6 +25,7 @@ userSchema.pre('findOne', function (next) {
     this.populate('watchlist')
     next()
 })
+
 userSchema.pre('findByIdAndUpdate', function (next) {
     this.populate('watchlist')
     next()
