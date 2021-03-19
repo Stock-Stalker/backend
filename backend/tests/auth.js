@@ -61,11 +61,13 @@ describe('Authentication API endpoints', function () {
             .post('/api/user/signup')
             .send({ username: 'anotheruser', password: 'mypassword' })
             .end(function (err, res) {
+                console.log(`@@@@@@ in signup test ${JSON.stringify(res)}`)
+                console.log(`@@@@@@ in signup test ${JSON.stringify(res.body)}`)
                 if (err) {
                     done(err)
                 }
                 expect(res.body.user).to.be.an('object')
-                console.log(`req.body.user: ${req.body.user}`)
+                console.log(`req.body.user: ${res.body.user}`)
                 expect(res.body.user).to.have.property(
                     'username',
                     'anotheruser'

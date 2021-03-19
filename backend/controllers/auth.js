@@ -26,7 +26,7 @@ exports.signUpUser = async (req, res) => {
             username: req.body.username,
             password: hashedPassword
         })
-        await user.save()
+        user.save()
         const token = jwt.sign(
             {
                 username: user.username,
@@ -37,6 +37,7 @@ exports.signUpUser = async (req, res) => {
                 expiresIn: '1h'
             }
         )
+        console.log(`In Auth Signuproute- token ${token}`)
         return res.status(200).json({
             message: 'Sign up successful!',
             user: {
