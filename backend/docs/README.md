@@ -340,3 +340,145 @@ Types:
 - symbol:String
 
 **Response**:
+
+Success status code: 200
+
+A successful response will return the user's watchlist. An example response is as follows:
+
+```json
+{
+  "watchlist": [
+    {
+      "_id": "6052a534e808fd0e72580cf2",
+      "symbol": "AAPL",
+      "companyName": "Apple, Inc. - Common Stock"
+    },
+    {
+      "_id": "6052a534e808fd0e72580cf2",
+      "symbol": "TSLA",
+      "companyName": "Tesla - Common Stock"
+    }
+  ]
+}
+
+Types:
+
+- watchlist: List containing objects
+  - _id: String (representing objectId)
+  - symbol: String
+  - companyName: String
+
+Error status code: 403
+
+An erroneous response will resolve with a status code of 403, and send the error message.
+
+```json
+{
+  "message": "error message"
+}
+```
+
+### Getting a User's Watchlist
+
+**Request**:
+
+To get the logged in user's watchlist, you will make the following request.
+
+url: '/user/watchlist'
+
+method: GET
+
+**Response**:
+
+Success status code: 200
+
+A successful response will return the user's watchlist. An example response is as follows:
+
+```json
+{
+  "watchlist": [
+    {
+      "_id": "6052a534e808fd0e72580cf2",
+      "symbol": "AAPL",
+      "companyName": "Apple, Inc. - Common Stock"
+    },
+    {
+      "_id": "6052a534e808fd0e72580cf2",
+      "symbol": "TSLA",
+      "companyName": "Tesla - Common Stock"
+    }
+  ]
+}
+
+Types:
+
+- watchlist: List containing objects
+  - _id: String (representing objectId)
+  - symbol: String
+  - companyName: String
+
+Error status code: 403
+
+An erroneous response will resolve with a status code of 403, and send the error message.
+
+```json
+{
+  "message": "error message"
+}
+```
+
+### Removing a Stock from User's Watchlist
+
+**Request**:
+
+url: '/user/watchlist/remove'
+
+method: PATCH
+
+The request will expect in the body the symbol of the stock you would like to remove from the watchlist.
+
+Example request body:
+
+```json
+{
+  "symbol": "TSLA"
+}
+```
+
+Types:
+
+- symbol: String
+
+**Response**:
+
+Success status code: 200
+
+A successful response will return the user's updated watchlist. An example response is as follows:
+
+```json
+{
+  "watchlist": [
+    {
+      "_id": "6052a534e808fd0e72580cf2",
+      "symbol": "AAPL",
+      "companyName": "Apple, Inc. - Common Stock"
+    },
+  ]
+}
+
+Types:
+
+- watchlist: List containing objects
+  - _id: String (representing objectId)
+  - symbol: String
+  - companyName: String
+
+Error status code: 403
+
+An erroneous response will resolve with a status code of 403, and send the error message.
+
+```json
+{
+  "message": "error message"
+}
+```
