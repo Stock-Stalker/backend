@@ -409,7 +409,7 @@ A successful response will return the user's watchlist. An example response is a
     }
   ]
 }
-
+```
 Types:
 
 - watchlist: List containing objects
@@ -465,6 +465,7 @@ A successful response will return the user's updated watchlist. An example respo
     },
   ]
 }
+```
 
 Types:
 
