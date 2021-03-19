@@ -12,14 +12,15 @@ const userSchema = new Schema(
             type: String,
             required: true
         },
-        watchlist: [
-            {
-                id: { type: Schema.Types.ObjectId, ref: 'Symbols' }
-            }
-        ]
+        watchlist: [{ type: Schema.Types.ObjectId, ref: 'Symbols' }]
     },
     { timestamps: true }
 )
+
+userSchema.pre('findOne', function (next) {
+    this.populate('watchlist')
+    next()
+})
 
 userSchema.pre('findOne', function (next) {
     this.populate('watchlist')
