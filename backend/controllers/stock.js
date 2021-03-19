@@ -1,7 +1,8 @@
 const {
     getCompanyName,
     getHistoricalData,
-    getAllStockData
+    getAllStockData,
+    getStockPrediction
 } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
 const axios = require('axios')
@@ -37,9 +38,8 @@ exports.getStockData = async (req, res) => {
 
 exports.getStockPrediction = async (req, res) => {
     try {
-        const symbol = req.params.symbol
-        const p = await axios.get(`http://stockstalker.tk/predictor/${symbol}`)
-        return res.status(200).send(p.data)
+        const prediction = await getStockPrediction(req.params.symbol)
+        return res.status(200).send(prediction)
     } catch (err) {
         console.log(err)
         return res.status(500).send({ message: err.message })
