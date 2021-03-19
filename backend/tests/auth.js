@@ -41,6 +41,7 @@ describe('Authentication API endpoints', function () {
                 if (err) {
                     done(err)
                 }
+                token = res.token
                 sampleUser.save()
                 done()
             })
@@ -63,12 +64,8 @@ describe('Authentication API endpoints', function () {
                 if (err) {
                     done(err)
                 }
-                expect(res.body.user).to.be.an('object')
-                expect(res.body.user).to.have.property(
-                    'username',
-                    'anotheruser'
-                )
-                expect(res).to.have.cookie('SSAuth')
+                expect(res.body).to.be.an('object')
+                expect(res.body.token).to.be.a('string')
                 // check that user is actually inserted into database
                 User.findOne({ username: 'anotheruser' }).then(function (user) {
                     expect(user).to.be.an('object')
@@ -86,7 +83,7 @@ describe('Authentication API endpoints', function () {
                     done(err)
                 }
                 expect(res).to.have.status(200)
-                expect(res).to.have.cookie('SSAuth')
+                expect(res.body.token).to.be.a('string')
                 done()
             })
     })
