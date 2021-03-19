@@ -1,8 +1,6 @@
-.git*
-.github*
+.git
 Dockerfile*
 docker-compose*.yml
-Makefile
 README.md
 
 hooks/
@@ -10,17 +8,6 @@ platforms/
 node_modules/
 resources/
 plugins/
+predictor/StockStalker.ipynb
 
-
-__pycache__/
-docs/
-tests/
-test/
-
-utils/get_data.py
-*.csv
 *.log
-*.toml
-
-.eslint*
-.prettier*

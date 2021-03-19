@@ -8,4 +8,6 @@ router.get('/', stockController.getAllStocks)
 
 router.get('/:symbol', stockController.getStockData)
 
+router.get('/prediction/:symbol', stockController.getStockData)
+
 module.exports = router
