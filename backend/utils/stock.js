@@ -1,6 +1,6 @@
 const axios = require('axios')
 const Symbols = require('../models/symbols')
-// const { client } = require('../utils/cache')
+const { client } = require('../utils/cache')
 
 const getCurrentTime = () => {
     /*  return the current time in yyyy-mm-dd hh:mm:ss format */
@@ -71,7 +71,9 @@ const getCompanyName = async (symbol) => {
         if (!company) {
             throw new Error(`Cannot find ${symbol}`)
         }
-        return company.companyName
+        const { companyName } = company
+        client.setex(symbol, 3600, companyName)
+        return companyName
     } catch (err) {
         console.log(err)
         throw err
