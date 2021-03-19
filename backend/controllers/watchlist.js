@@ -5,7 +5,6 @@ const Symbols = require('../models/symbols')
 exports.getwatchlist = async (req, res) => {
     try {
         const user = await getUser(req.userId)
-        console.log(user)
         res.send(user.watchlist)
     } catch (err) {
         res.status(403).send({ message: err.message })
@@ -32,7 +31,7 @@ exports.removeFromWatchlist = async (req, res) => {
         })
         const symbolID = symbolToRemove._id
         const user = await User.findOne({ _id: req.userId })
-        const updatedWatchlist = await user.watchlist.pull({ _id: symbolID })
+        await user.watchlist.pull({ _id: symbolID })
         user.save()
         return res.status(200).send(user.watchlist)
     } catch (err) {
