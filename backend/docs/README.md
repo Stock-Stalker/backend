@@ -314,3 +314,29 @@ Example 500 error message:
   "err": "[error] 29#29: *17 upstream timed out (110: Operation timed out) while reading response header from upstream, client: 172.18.0.1, server: stockstalker.tk"
 }
 ```
+
+## User Watchlists
+
+Each user is able to track a watchlist - a list of stocks they're interested in tracking the performance of.
+
+### Adding to the Watchlist
+
+**Request**:
+
+url: '/user/watchlist'
+
+method: PATCH
+
+Example request body:
+
+```json
+{
+  "symbol": "AAPL"
+}
+```
+
+Types:
+
+- symbol:String
+
+**Response**:
