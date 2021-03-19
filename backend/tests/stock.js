@@ -19,7 +19,8 @@ describe('Stocks endpoints', function () {
             return done()
         })
     })
-    it('should get the stock data', (done) => {
+
+    it('should get the stock data', function (done) {
         agent.get('/api/stocks/AAPL').end((err, res) => {
             if (err) {
                 return done(err)
@@ -28,13 +29,12 @@ describe('Stocks endpoints', function () {
             expect(res.body).to.be.an('Object')
             expect(res.body.stockData.historicalData).to.be.an('array')
             expect(res.body.stockData.symbol).to.be.equal('AAPL')
-            expect(res.body.stockData.companyName).to.be.equal(
-                'Apple Inc. - Common Stock'
-            )
+            expect(res.body.stockData.companyName).to.be.equal('Apple')
             return done()
         })
     })
-    it('should return status 404 when enter invalid symbol', (done) => {
+
+    it('should return status 404 when enter invalid symbol', function (done) {
         agent.get('/api/stocks/AAPLLL').end((err, res) => {
             if (err) {
                 return done(err)
