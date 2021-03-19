@@ -36,6 +36,11 @@ Example response:
 ]
 ```
 
+Types:
+
+- symbol: String
+- companyName: String
+
 Error status code: 500
 
 An unsuccessful request, for any reason (such as the database connection times out, or there's another server-side issue) will result in an error response:
@@ -74,12 +79,8 @@ Successful responses will return ```stockData```. An example response:
 {
   "stockData": {
     "symbol": "AAPL",
-    "companyName":
-    {
-      "companyName":"Apple Inc. - Common Stock"
-    },
-      "historicalData":
-      [{
+    "companyName":"Apple Inc. - Common Stock",
+    "historicalData": [{
         "datetime": "2021-03-16",
         "open":"125.70000",
         "high":"127.22000",
@@ -97,8 +98,22 @@ Successful responses will return ```stockData```. An example response:
           }
         ... ]
       }
+    }
 }
 ```
+
+Types:
+
+- stockData: Object
+  - symbol: String
+  - companyName: String
+  - historicalData: List of objects
+    - datetime: String
+    - open: String
+    - high: String
+    - low: String
+    - close: String
+    - volume: String
 
 Error status code: 404
 
@@ -137,17 +152,27 @@ Example request body:
 }
 ```
 
+Types:
+
+- username: String
+- password: String
+
 **Response**:
 
 Success status code: 200
 
-A successful response will set a cookie with an authenticated JWT.
+A successful response will send a Bearer token to be set in the Authorization header.
+This header will be evaluated for all restricted routes.
+
+Example Authorization header for your reference:
 
 ```js
-res.cookie('SSAuth', token)
+headers: {
+  'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZBS0VVU0VSIiwidXNlcklkIjoiNjA1M2JlZTg5YzU3MTcwMTQyMDExYzM2IiwiaWF0IjoxNjE2MTAxMTIzLCJleHAiOjE2MTYxMDQ3MjN9.IzWXlrFS7mQqR652keVEHnR4ayspk5yyyMjRpYTY7gw'
+}
 ```
 
-Additionally, the response will send a success message and your new user's username.
+The response will send a success message and your new user's username.
 
 Example response:
 
@@ -156,9 +181,18 @@ Example response:
   "message": "Sign up successful!",
   "user": {
     "username": "newuser"
-  }
+  },
+  "token":
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZBS0VVU0VSIiwidXNlcklkIjoiNjA1M2JlZTg5YzU3MTcwMTQyMDExYzM2IiwiaWF0IjoxNjE2MTAxMTIzLCJleHAiOjE2MTYxMDQ3MjN9.IzWXlrFS7mQqR652keVEHnR4ayspk5yyyMjRpYTY7gw"
 }
 ```
+
+Types:
+
+- message: String
+- user: Object
+  - username: String
+- token: String
 
 Validation error status code: 422
 
@@ -215,14 +249,24 @@ Example request body:
 }
 ```
 
+Types:
+
+- username: String
+- password: String
+
 **Response**:
 
 Success status code: 200
 
-A successful response will set a cookie with an authenticated JWT.
+A successful response will send a Bearer token to be set in the Authorization header.
+This header will be evaluated for all restricted routes.
+
+Example Authorization header for your reference:
 
 ```js
-res.cookie('SSAuth', token)
+headers: {
+  'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZBS0VVU0VSIiwidXNlcklkIjoiNjA1M2JlZTg5YzU3MTcwMTQyMDExYzM2IiwiaWF0IjoxNjE2MTAxMTIzLCJleHAiOjE2MTYxMDQ3MjN9.IzWXlrFS7mQqR652keVEHnR4ayspk5yyyMjRpYTY7gw'
+}
 ```
 
 Additionally, the response will send a success message to verify your user is now signed in.
@@ -232,8 +276,14 @@ Example response:
 ```json
 {
   "message": "Sign in successful!",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZBS0VVU0VSIiwidXNlcklkIjoiNjA1M2JlZTg5YzU3MTcwMTQyMDExYzM2IiwiaWF0IjoxNjE2MTAxMTIzLCJleHAiOjE2MTYxMDQ3MjN9.IzWXlrFS7mQqR652keVEHnR4ayspk5yyyMjRpYTY7gw"
 }
 ```
+
+Types:
+
+- message: String
+- token: String
 
 Validation error status code: 422
 
@@ -262,27 +312,5 @@ Example 500 error message:
 ```json
 {
   "err": "[error] 29#29: *17 upstream timed out (110: Operation timed out) while reading response header from upstream, client: 172.18.0.1, server: stockstalker.tk"
-}
-```
-
-### Signing Out Users
-
-**Request**:
-
-url: "/user/signout"
-
-method: GET
-
-The signout route will expect a valid authentication cookie to be present.
-
-**Response**:
-
-Success status code: 200
-
-A successful sign out request will return a status code of 200, and a message stating that the sign out has been successful. An example success response:
-
-```json
-{
-  "message": "Successfully signed out"
 }
 ```
