@@ -10,9 +10,9 @@ const { parse, stringify } = require('flatted')
 exports.getAllStocks = async (req, res) => {
     try {
         const stockData = await getAllStockData()
-        res.send(stockData)
+        return res.status(200).send(stockData)
     } catch (err) {
-        res.send({ message: err.message })
+        return res.status(500).send({ message: err.message })
     }
 }
 
@@ -29,9 +29,9 @@ exports.getStockData = async (req, res) => {
             historicalData,
             currentPrice: historicalData[0].close
         }
-        res.send({ stockData })
+        return res.status(200).send({ stockData })
     } catch (err) {
-        res.status(404).send({ message: err.message })
+        return res.status(404).send({ message: err.message })
     }
 }
 
@@ -39,10 +39,9 @@ exports.getStockPrediction = async (req, res) => {
     try {
         const symbol = req.params.symbol
         const p = await axios.get(`http://stockstalker.tk/predictor/${symbol}`)
-        console.log(`prediction: ${p.data.toString()}`)
-        return res.status(200).json({ prediction: p.data.predictions.toString() })
-        // return res.status(200).send(p)
+        return res.status(200).send(p.data)
     } catch (err) {
-        res.status(500).send({ message: err.message })
+        console.log(err)
+        return res.status(500).send({ message: err.message })
     }
 }
