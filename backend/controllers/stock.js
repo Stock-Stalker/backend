@@ -13,6 +13,7 @@ exports.getAllStocks = async (req, res) => {
         res.send({ message: err.message })
     }
 }
+
 exports.getStockData = async (req, res) => {
     const symbol = req.params.symbol.toUpperCase()
     try {
