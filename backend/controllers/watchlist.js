@@ -6,7 +6,6 @@ const Symbols = require('../models/symbols')
 exports.getwatchlist = async (req, res) => {
     try {
         const user = await getUser(req.userId)
-        console.log(user)
         res.send(user.watchlist)
     } catch (err) {
         res.status(403).send({ message: err.message })

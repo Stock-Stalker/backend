@@ -11,5 +11,6 @@ router.get('/', isAuth, watchlistController.getwatchlist)
 router.patch('/', isAuth, watchlistController.addToWatchlist)
 
 router.patch('/remove', isAuth, watchlistController.removeFromWatchlist)
+router.patch('/update', isAuth, watchlistController.updateWatchlist)
 
 module.exports = router
