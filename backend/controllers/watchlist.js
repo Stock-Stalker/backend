@@ -5,7 +5,6 @@ const Symbols = require('../models/symbols')
 exports.getwatchlist = async (req, res) => {
     try {
         const user = await getUser(req.userId)
-        // TODO: populate this so we don't just get the id reference back
         res.send(user.watchlist)
     } catch (err) {
         res.status(403).send({ message: err.message })
@@ -32,7 +31,6 @@ exports.removeFromWatchlist = async (req, res) => {
             symbol: req.body.symbol
         })
         const symbolID = symbolToRemove._id
-        console.log(`symbolId: ${symbolID}`)
         const updatedUser = await User.findByIdAndUpdate(
             req.userId,
             { $pull: { watchlist: { _id: symbolID.toString() } } },

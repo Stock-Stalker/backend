@@ -10,6 +10,7 @@ chai.use(chaiHttp)
 const agent = chai.request.agent(app)
 
 const User = require('../models/user')
+const Symbols = require('../models/symbols')
 
 let token
 
@@ -24,7 +25,6 @@ after(function (done) {
 })
 
 const SAMPLE_OBJECT_ID = 'aaaaaaaaaaaa' // 12 byte string
-
 describe('Watchlist API endpoints', function () {
     // Create a sample user for use in tests.
     beforeEach(function (done) {
@@ -32,18 +32,28 @@ describe('Watchlist API endpoints', function () {
             username: 'myuser',
             password: 'mypassword',
             watchlist: [],
-            _id: SAMPLE_OBJECT_ID,
+            _id: SAMPLE_OBJECT_ID
         })
         chai.request(app)
             .post('/api/user/signup')
             .set('content-type', 'application/json')
             .send(sampleUser)
-            .end((err, res) => {
-                if (err) {
-                    done(err)
-                }
+            .then(function (res) {
                 sampleUser.save()
                 token = res.body.token
+                chai.request(app)
+                    .patch('/api/user/watchlist')
+                    .set('Authorization', `Bearer ${token}`)
+                    .send({ symbol: 'AAPL' })
+                    .then(function (res) {
+                        console.log(res.body)
+                        done()
+                    }).catch(function (err) {
+                        console.log(err)
+                        done()
+                    })
+            }).catch(function (err) {
+                console.log(err)
                 done()
             })
     })
@@ -55,16 +65,78 @@ describe('Watchlist API endpoints', function () {
         })
     })
 
+    it('should add a stock into users watchlist', function (done) {
+        let initialCount = 0
+        chai.request(app)
+            .get('/api/user/watchlist')
+            .set('Authorization', `Bearer ${token}`)
+            .then(function (res) {
+                initialCount = res.body.length
+                chai.request(app)
+                    .patch('/api/user/watchlist')
+                    .set('Authorization', `Bearer ${token}`)
+                    .send({ symbol: 'GOOG' })
+                    .then(function (res) {
+                        chai.request(app)
+                            .get('/api/user/watchlist')
+                            .set('Authorization', `Bearer ${token}`)
+                            .then(function (res) {
+                                expect(res.body.length).to.be.equal(initialCount + 1)
+                                done()
+                            }).catch(function (err) {
+                                console.log(err)
+                                done()
+                            })
+                    }).catch(function (err) {
+                        console.log(err)
+                        done()
+                    })
+            }).catch(function (err) {
+                console.log(err)
+                done()
+            })
+    })
+    it('should remove a stock from users watchlist', function (done) {
+        let initialCount = 0
+        chai.request(app)
+            .get('/api/user/watchlist')
+            .set('Authorization', `Bearer ${token}`)
+            .then(function (res) {
+                initialCount = res.body.length
+                chai.request(app)
+                    .patch('/api/user/watchlist/remove')
+                    .set('Authorization', `Bearer ${token}`)
+                    .send({ symbol: 'GOOG' })
+                    .then(function (res) {
+                        chai.request(app)
+                            .get('/api/user/watchlist')
+                            .set('Authorization', `Bearer ${token}`)
+                            .then(function (res) {
+                                expect(res.body.length).to.be.equal(initialCount - 1)
+                                done()
+                            }).catch(function (err) {
+                                console.log(err)
+                                done()
+                            })
+                    }).catch(function (err) {
+                        console.log(err)
+                        done()
+                    })
+            }).catch(function (err) {
+                console.log(err)
+                done()
+            })
+    })
     it('should get all stock data in users watchlist', function (done) {
         chai.request(app)
-            .post('/api/user/watchlist')
+            .get('/api/user/watchlist')
             .set('Authorization', `Bearer ${token}`)
             .end(function (err, res) {
                 if (err) {
                     done(err)
                 }
                 expect(res.body).to.be.an('Array')
-                expect(res.body.user).to.have.property('username', 'anotheruser');
+                done()
             })
     })
 })
