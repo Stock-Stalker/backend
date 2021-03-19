@@ -1,11 +1,10 @@
-const { getStock, getUser, checkDuplicate } = require('../utils/watchlist')
+const { getStock, getUser } = require('../utils/watchlist')
 const User = require('../models/user')
 const Symbols = require('../models/symbols')
 
-exports.getwatchlist = async (req, res) => {
+exports.getWatchlist = async (req, res) => {
     try {
         const user = await getUser(req.userId)
-        // TODO: populate this so we don't just get the id reference back
         res.send(user.watchlist)
     } catch (err) {
         res.status(403).send({ message: err.message })
@@ -16,11 +15,10 @@ exports.addToWatchlist = async (req, res) => {
     try {
         const user = await getUser(req.userId)
         const stock = await getStock(req.body.symbol)
-        if (!checkDuplicate(stock._id, user.watchlist)) {
-            user.watchlist.unshift(stock)
-        }
-        user.save()
-        res.send(user.watchlist)
+        user.watchlist.addToSet(stock)
+        await user.save()
+        const updatedUser = await getUser(req.userId)
+        res.send(updatedUser.watchlist)
     } catch (err) {
         res.status(403).send({ message: err.message })
     }
@@ -32,13 +30,10 @@ exports.removeFromWatchlist = async (req, res) => {
             symbol: req.body.symbol
         })
         const symbolID = symbolToRemove._id
-        console.log(`symbolId: ${symbolID}`)
-        const updatedUser = await User.findByIdAndUpdate(
-            req.userId,
-            { $pull: { watchlist: { _id: symbolID.toString() } } },
-            { new: true }
-        ).populate('watchlist')
-        return res.status(200).send(updatedUser.watchlist)
+        const user = await User.findOne({ _id: req.userId })
+        await user.watchlist.pull({ _id: symbolID })
+        user.save()
+        return res.status(200).send(user.watchlist)
     } catch (err) {
         return res.status(403).send({ message: err.message })
     }
