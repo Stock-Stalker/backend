@@ -108,6 +108,8 @@ const getPredictionsFromAPI = async (symbols) => {
     }
 }
 
+console.log(getPredictionsFromAPI)
+
 const getCurrentPrice = async (symbol) => {
     try {
         const res = await axios.get(
@@ -145,7 +147,6 @@ module.exports = {
     getHistoricalData,
     getAllCompanyNames,
     getPredictionFromAPI,
-    getPredictionsFromAPI
     getCurrentPrice,
     getCurrentPrices
 }
