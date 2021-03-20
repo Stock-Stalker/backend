@@ -49,25 +49,12 @@ const getHistoricalData = async (symbol) => {
     }
 }
 
-const getCompanyName = async (symbol) => {
-    /* check if the symbol or company input is valid
-    Input: stock symbol or company, case insensitive
-    Output: {symbol,companyName} */
+const getCompanyNameFromDB = async (symbol) => {
+    /* check if the symbol
+    Input: symbol
+    Output: companyName */
     try {
-        const company = await Symbols.findOne({
-            $or: [
-                {
-                    symbol: {
-                        $regex: new RegExp('^' + symbol.toUpperCase(), 'i')
-                    }
-                },
-                {
-                    companyName: {
-                        $regex: new RegExp('^' + symbol.toLowerCase(), 'i')
-                    }
-                }
-            ]
-        })
+        const company = await Symbols.findOne({ symbol: symbol })
         if (!company) {
             throw new Error(`Cannot find ${symbol}`)
         }
@@ -80,7 +67,7 @@ const getCompanyName = async (symbol) => {
     }
 }
 
-const getAllStockData = async () => {
+const getAllCompanyNames = async () => {
     /* Returns all the stocks' symbol and company name
      Output: {symbol,companyName} */
     try {
@@ -92,13 +79,27 @@ const getAllStockData = async () => {
     }
 }
 
-const getStockPrediction = async (symbol) => {
+const getPredictionFromAPI = async (symbol) => {
     // Returns predictions from /predictor. Either list of predictions or int:2
     try {
-        const p = await axios.get(`http://stockstalker.tk/predictor/${symbol}`)
-        return p.data
+        const prediction = await axios.get(
+            `http://stockstalker.tk/predictor/${symbol}`
+        )
+        client.setex(`${symbol}_predict`, 3600, prediction.data)
+        return prediction.data
     } catch (err) {
-        return err.message
+        throw err.message
+    }
+}
+
+const getPredictionsFromAPI = async (symbols) => {
+    try {
+        const predictions = await axios.get(
+            `http://stockstalker.tk/predictor/${request}`
+        )
+        return predictions.data
+    } catch (err) {
+        throw err.message
     }
 }
 
@@ -106,7 +107,7 @@ const getCurrentPrice = async (symbol) => {
     try {
         const res = await axios.get(
             'https://api.twelvedata.com/price?' +
-                `symbol=${symbol.toUpperCase()}&` +
+                `symbol=${symbol}&` +
                 `apikey=${process.env.STOCK_DATA_API}`
         )
         if (!res.data.price) {
@@ -118,10 +119,27 @@ const getCurrentPrice = async (symbol) => {
     }
 }
 
+const getCurrentPrices = async (symbols) => {
+    try {
+        const res = await axios.get(
+            'https://api.twelvedata.com/price?' +
+                `symbol=${symbols.join('')}&` +
+                `apikey=${process.env.STOCK_DATA_API}`
+        )
+        if (!res.data) {
+            throw new Error(`Cannot find ${symbols.join(' ')}`)
+        }
+        return res.data
+    } catch (err) {
+        throw err.message
+    }
+}
+
 module.exports = {
-    getCompanyName,
+    getCompanyNameFromDB,
     getHistoricalData,
-    getAllStockData,
-    getStockPrediction,
-    getCurrentPrice
+    getAllCompanyNames,
+    getPredictionFromAPI,
+    getCurrentPrice,
+    getCurrentPrices
 }
