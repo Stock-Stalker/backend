@@ -2,7 +2,6 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 
-const mainRoutes = require('./routes/main')
 const stockRoutes = require('./routes/stock')
 const authRoutes = require('./routes/auth')
 const watchlistRoutes = require('./routes/watchlist')
@@ -25,14 +24,14 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/user/watchlist', watchlistRoutes)
-app.use('/api/stocks', stockRoutes)
+app.use('/api/stock', stockRoutes)
 app.use('/api/user', authRoutes)
-app.use('/api', mainRoutes)
 
 mongoose
     .connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
     })
     .then((result) => {
         console.log('CONNECTED')
