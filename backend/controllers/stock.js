@@ -24,11 +24,14 @@ exports.getOneStock = async (req, res) => {
             (await getCompanyName(symbol))
         const historicalData = await getHistoricalData(symbol)
         const currentPrice = await getCurrentPrice(symbol)
+        let prediction = await getStockPrediction(symbol)
+        prediction = prediction.data
         const stockData = {
             symbol,
             companyName,
-            historicalData,
-            currentPrice: currentPrice
+            currentPrice,
+            prediction,
+            historicalData
         }
         return res.status(200).send({ stockData })
     } catch (err) {
