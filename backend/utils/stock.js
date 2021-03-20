@@ -109,9 +109,13 @@ const getStockCurrentPrice = async (symbol) => {
             'https://api.twelvedata.com/price?' +
                 `symbol=${targetSymbol}&` +
                 `apikey=${process.env.STOCK_DATA_API}`)
+        if (!res.data.price) {
+            throw new Error('Cannot Find The Symbols')
+        }
         return res.data.price
     } catch (err) {
-        return err.message
+        console.log(err)
+        throw err
     }
 }
 
