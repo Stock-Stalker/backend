@@ -360,6 +360,7 @@ A successful response will return the user's watchlist. An example response is a
     }
   ]
 }
+```
 
 Types:
 
