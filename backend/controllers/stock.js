@@ -22,16 +22,17 @@ exports.getAllStocks = async (req, res) => {
 exports.getStockData = async (req, res) => {
     const symbol = req.params.symbol.toUpperCase()
     try {
-        const companyName =
-            (await getCompanyNameFromCache(symbol)) ||
-            (await getCompanyName(symbol))
+        const companyName = (await getCompanyNameFromCache(symbol)) || (await getCompanyName(symbol))
         const historicalData = await getHistoricalData(symbol)
         const currentPrice = await getStockCurrentPrice(symbol)
+        let prediction = await getStockPrediction(symbol)
+        prediction = prediction.data
         const stockData = {
             symbol,
             companyName,
-            historicalData,
-            currentPrice: currentPrice
+            currentPrice,
+            prediction,
+            historicalData
         }
         return res.status(200).send({ stockData })
     } catch (err) {
