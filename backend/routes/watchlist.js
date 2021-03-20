@@ -6,7 +6,7 @@ const watchlistController = require('../controllers/watchlist')
 
 const isAuth = require('../middleware/isAuth')
 
-router.get('/', isAuth, watchlistController.getwatchlist)
+router.get('/', isAuth, watchlistController.getWatchlist)
 
 router.patch('/', isAuth, watchlistController.addToWatchlist)
 

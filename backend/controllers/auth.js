@@ -21,16 +21,16 @@ exports.signUpUser = async (req, res) => {
                 message: 'User already exists!'
             })
         }
-        const hashedPassword = bcrypt.hash(password, 12)
+        const hashedPassword = await bcrypt.hash(password, 12)
         user = new User({
             username: req.body.username,
             password: hashedPassword
         })
-        await user.save()
+        const savedUser = await user.save()
         const token = jwt.sign(
             {
-                username: user.username,
-                userId: user._id.toString()
+                username: savedUser.username,
+                userId: savedUser._id.toString()
             },
             process.env.SECRET_KEY,
             {
@@ -40,12 +40,12 @@ exports.signUpUser = async (req, res) => {
         return res.status(200).json({
             message: 'Sign up successful!',
             user: {
-                username: user.username
+                username: savedUser.username
             },
             token: token
         })
     } catch (err) {
-        return res.status(500).json({ err })
+        return res.status(500).json(err)
     }
 }
 
@@ -83,7 +83,7 @@ exports.signInUser = async (req, res) => {
         )
         return res
             .status(200)
-            .json({ message: 'Sign in successful', token: token })
+            .json({ message: 'Sign in successful', token: token, user: user })
     } catch (err) {
         res.status(500).json({ err })
     }
