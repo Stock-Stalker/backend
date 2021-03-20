@@ -1,14 +1,11 @@
-const fs = require('fs')
 const {
     getCompanyName,
     getHistoricalData,
     getAllStockData,
     getStockPrediction,
-    getStockCurrentPrice
+    getCurrentPrice
 } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
-const axios = require('axios')
-const { parse, stringify } = require('flatted')
 
 exports.getAllStocks = async (req, res) => {
     try {
@@ -19,12 +16,14 @@ exports.getAllStocks = async (req, res) => {
     }
 }
 
-exports.getStockData = async (req, res) => {
+exports.getOneStock = async (req, res) => {
     const symbol = req.params.symbol.toUpperCase()
     try {
-        const companyName = (await getCompanyNameFromCache(symbol)) || (await getCompanyName(symbol))
+        const companyName =
+            (await getCompanyNameFromCache(symbol)) ||
+            (await getCompanyName(symbol))
         const historicalData = await getHistoricalData(symbol)
-        const currentPrice = await getStockCurrentPrice(symbol)
+        const currentPrice = await getCurrentPrice(symbol)
         let prediction = await getStockPrediction(symbol)
         prediction = prediction.data
         const stockData = {
@@ -50,21 +49,23 @@ exports.getStockPrediction = async (req, res) => {
     }
 }
 
-exports.getPopularStock = (req, res) => {
-    fs.readFile('data/popularStock.json', (err, data) => {
-        if (err) throw err
-        const popularStock = JSON.parse(data)
-        return res.status(200).send(popularStock)
-    })
-}
-
-exports.getCurrentPrice = async (req, res) => {
+exports.getPopularStocks = async (req, res) => {
     try {
-        const symbol = req.params.symbol
-        const price = await getStockCurrentPrice(symbol)
-        return res.status(200).send({ currentPrice: price })
+        const popularStockData = []
+        const popularStockSymbols = ['AAPL', 'TSLA', 'NFLX', 'AMZN', 'FB']
+        for (const symbol of popularStockSymbols) {
+            try {
+                const currentPrice = await getCurrentPrice(symbol)
+                popularStockData.push({
+                    symbol: symbol,
+                    currentPrice: currentPrice
+                })
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        return res.status(200).send(popularStockData)
     } catch (err) {
-        console.log(err)
-        return res.status(404).send({ message: err.message })
+        return res.status(500).send({ message: err.message })
     }
 }

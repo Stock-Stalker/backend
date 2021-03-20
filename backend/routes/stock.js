@@ -6,12 +6,10 @@ const stockController = require('../controllers/stock')
 
 router.get('/prediction/:symbol', stockController.getStockPrediction)
 
+router.get('/popular', stockController.getPopularStocks)
+
+router.get('/:symbol', stockController.getOneStock)
+
 router.get('/', stockController.getAllStocks)
-
-router.get('/current-price/:symbol', stockController.getCurrentPrice)
-
-router.get('/popular', stockController.getPopularStock)
-
-router.get('/:symbol', stockController.getStockData)
 
 module.exports = router

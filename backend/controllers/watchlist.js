@@ -1,15 +1,14 @@
-const { getStock, getUser } = require('../utils/watchlist')
 const { getStockPrediction } = require('../utils/stock')
 const User = require('../models/user')
+const Symbols = require('../models/symbols')
 
 exports.getWatchlist = async (req, res) => {
     try {
-        const user = await getUser(req.userId)
+        const user = await User.findOne({ _id: req.userId })
         const watchlist = JSON.parse(JSON.stringify(user.watchlist))
-        for (let i = 0; i < watchlist.length; i++) {
-            const entry = watchlist[i]
-            const prediction = await getStockPrediction(entry.symbol)
-            entry.prediction = prediction.data
+        for (const stock of watchlist) {
+            const prediction = await getStockPrediction(stock.symbol)
+            stock.prediction = prediction.data
         }
         return res.status(200).send(watchlist)
     } catch (err) {
@@ -19,13 +18,17 @@ exports.getWatchlist = async (req, res) => {
 
 exports.updateWatchlist = async (req, res) => {
     try {
-        const targetSymbol = await getStock(req.body.symbol)
-        const user = await getUser(req.userId)
-        const isExist = await User.findOne({ _id: req.userId, watchlist: targetSymbol })
-        if (isExist) {
-            await user.watchlist.pull({ _id: targetSymbol._id })
+        const symbol = req.body.symbol.toUpperCase()
+        let user = await User.findOne({
+            _id: req.userId,
+            watchlist: { $elemMatch: { symbol: symbol } }
+        })
+        if (user) {
+            await user.watchlist.pull({ symbol: symbol })
         } else {
-            await user.watchlist.addToSet(targetSymbol)
+            const stock = await Symbols.findOne({ symbol: symbol })
+            user = await User.findOne({ _id: req.userId })
+            await user.watchlist.addToSet(stock)
         }
         await user.save()
         return res.status(200).send(user.watchlist)
