@@ -3,7 +3,8 @@ const {
     getCompanyName,
     getHistoricalData,
     getAllStockData,
-    getStockPrediction
+    getStockPrediction,
+    getStockCurrentPrice
 } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
 const axios = require('axios')
@@ -25,11 +26,12 @@ exports.getStockData = async (req, res) => {
             (await getCompanyNameFromCache(symbol)) ||
             (await getCompanyName(symbol))
         const historicalData = await getHistoricalData(symbol)
+        const currentPrice = await getStockCurrentPrice(symbol)
         const stockData = {
             symbol,
             companyName,
             historicalData,
-            currentPrice: historicalData[0].close
+            currentPrice: currentPrice
         }
         return res.status(200).send({ stockData })
     } catch (err) {
@@ -53,4 +55,15 @@ exports.getPopularStock = (req, res) => {
         const popularStock = JSON.parse(data)
         return res.status(200).send(popularStock)
     })
+}
+
+exports.getCurrentPrice = async (req, res) => {
+    try {
+        const symbol = req.params.symbol
+        const price = await getStockCurrentPrice(symbol)
+        return res.status(200).send({ currentPrice: price })
+    } catch (err) {
+        console.log(err)
+        return res.status(404).send({ message: err.message })
+    }
 }

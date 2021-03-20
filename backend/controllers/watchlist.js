@@ -6,7 +6,7 @@ exports.getWatchlist = async (req, res) => {
         const user = await getUser(req.userId)
         return res.status(200).send(user.watchlist)
     } catch (err) {
-        res.status(403).send({ message: err.message })
+        return res.status(403).send({ message: err.message })
     }
 }
 
