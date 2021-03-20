@@ -426,3 +426,69 @@ An erroneous response will resolve with a status code of 403, and send the error
   "message": "error message"
 }
 ```
+
+## Predictions
+
+Let's face it - the most interesting thing about StockStalker is the ability to receive predictions about the potential performance of a stock.
+
+### Getting a Prediction for a Stock
+
+**Request**:
+
+url: '/stocks/prediction/:symbol'
+
+method: GET
+
+Example request url:
+
+```zsh
+http://stockstalker.tk/api/stocks/prediction/aapl
+
+http://stockstalker.tk/api/stocks/prediction/AAPL
+```
+
+**Response**:
+
+Success status code: 200
+
+A successful response will return a status code of 200, and the prediction or list of predictions for the given stock.
+
+The current version of StockStalker does not return predictions if there is no news that day for the given stock. If there are no headlines matching your desired company's stock keywords, our prediction model will return a neutral prediction.
+
+Example neutral response:
+
+```json
+{
+  "prediction": 2
+}
+```
+
+Types:
+
+- prediction:Integer
+
+When there are headlines about a given company, StockStalker will return to you a list of predictions. The most common prediction is the most likely for the day. Each headline generates a prediction.
+
+Example response when headlines are present for the day:
+
+```json
+{
+  "prediction": [0, 1, 1, 1, 1]
+}
+```
+
+Types:
+
+- prediction: List of integers
+
+Error status code: 500
+
+When there is an error, a status code of 500 will be returned, along with the error message.
+
+Example error response:
+
+```json
+{
+  "message": "This is an error message"
+}
+```

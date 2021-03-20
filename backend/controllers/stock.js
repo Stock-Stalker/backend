@@ -2,16 +2,19 @@ const fs = require('fs')
 const {
     getCompanyName,
     getHistoricalData,
-    getAllStockData
+    getAllStockData,
+    getStockPrediction
 } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
+const axios = require('axios')
+const { parse, stringify } = require('flatted')
 
 exports.getAllStocks = async (req, res) => {
     try {
         const stockData = await getAllStockData()
-        res.send(stockData)
+        return res.status(200).send(stockData)
     } catch (err) {
-        res.send({ message: err.message })
+        return res.status(500).send({ message: err.message })
     }
 }
 
@@ -28,9 +31,19 @@ exports.getStockData = async (req, res) => {
             historicalData,
             currentPrice: historicalData[0].close
         }
-        res.send({ stockData })
+        return res.status(200).send({ stockData })
     } catch (err) {
-        res.status(404).send({ message: err.message })
+        return res.status(404).send({ message: err.message })
+    }
+}
+
+exports.getStockPrediction = async (req, res) => {
+    try {
+        const prediction = await getStockPrediction(req.params.symbol)
+        return res.status(200).send(prediction)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send({ message: err.message })
     }
 }
 

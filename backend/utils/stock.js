@@ -92,8 +92,19 @@ const getAllStockData = async () => {
     }
 }
 
+const getStockPrediction = async (symbol) => {
+    // Returns predictions from /predictor. Either list of predictions or int:2
+    try {
+        const p = await axios.get(`http://stockstalker.tk/predictor/${symbol}`)
+        return p.data
+    } catch (err) {
+        return err.message
+    }
+}
+
 module.exports = {
     getCompanyName,
     getHistoricalData,
-    getAllStockData
+    getAllStockData,
+    getStockPrediction
 }
