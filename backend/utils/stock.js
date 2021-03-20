@@ -94,9 +94,14 @@ const getPredictionFromAPI = async (symbol) => {
 
 const getPredictionsFromAPI = async (symbols) => {
     try {
+        const params = new URLSearchParams()
+        symbols.forEach((symbol) => {
+            params.append('symbol', symbol)
+        })
         const predictions = await axios.get(
-            `http://stockstalker.tk/predictor/${request}`
+            `http://stockstalker.tk/predictor/${params}`
         )
+        // for loop on data to save in cache
         return predictions.data
     } catch (err) {
         throw err.message
@@ -140,6 +145,7 @@ module.exports = {
     getHistoricalData,
     getAllCompanyNames,
     getPredictionFromAPI,
+    getPredictionsFromAPI
     getCurrentPrice,
     getCurrentPrices
 }
