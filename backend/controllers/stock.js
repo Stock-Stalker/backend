@@ -6,8 +6,6 @@ const {
     getStockPrediction
 } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
-const axios = require('axios')
-const { parse, stringify } = require('flatted')
 
 exports.getAllStocks = async (req, res) => {
     try {
