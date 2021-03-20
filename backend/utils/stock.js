@@ -108,7 +108,8 @@ const getStockCurrentPrice = async (symbol) => {
         const res = await axios.get(
             'https://api.twelvedata.com/price?' +
                 `symbol=${targetSymbol}&` +
-                `apikey=${process.env.STOCK_DATA_API}`)
+                `apikey=${process.env.STOCK_DATA_API}`
+        )
         if (!res.data.price) {
             throw new Error('Cannot Find The Symbols')
         }

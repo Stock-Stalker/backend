@@ -14,7 +14,10 @@ exports.updateWatchlist = async (req, res) => {
     try {
         const targetSymbol = await getStock(req.body.symbol)
         const user = await getUser(req.userId)
-        const isExist = await User.findOne({ _id: req.userId, watchlist: targetSymbol })
+        const isExist = await User.findOne({
+            _id: req.userId,
+            watchlist: targetSymbol
+        })
         if (isExist) {
             await user.watchlist.pull({ _id: targetSymbol._id })
         } else {
