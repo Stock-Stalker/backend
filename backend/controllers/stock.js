@@ -1,4 +1,3 @@
-const fs = require('fs')
 const {
     getCompanyName,
     getHistoricalData,
@@ -47,22 +46,23 @@ exports.getStockPrediction = async (req, res) => {
     }
 }
 
-exports.getPopularStocks = (req, res) => {
-    fs.readFile('data/popularStock.json', (err, data) => {
-        if (err) throw err
+exports.getPopularStocks = async (req, res) => {
+    try {
         const popularStockData = []
-        const popularStock = JSON.parse(data)
-        popularStock.forEach(async (stockSymbol) => {
+        const popularStockSymbols = ['AAPL', 'TSLA', 'NFLX', 'AMZN', 'FB']
+        for (const symbol of popularStockSymbols) {
             try {
-                const currentPrice = await getCurrentPrice(stockSymbol)
+                const currentPrice = await getCurrentPrice(symbol)
                 popularStockData.push({
-                    symbol: stockSymbol,
+                    symbol: symbol,
                     currentPrice: currentPrice
                 })
             } catch (err) {
                 console.log(err)
             }
-        })
+        }
         return res.status(200).send(popularStockData)
-    })
+    } catch (err) {
+        return res.status(500).send({ message: err.message })
+    }
 }
