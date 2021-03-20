@@ -1,3 +1,4 @@
+const fs = require('fs')
 const {
     getCompanyName,
     getHistoricalData,
@@ -44,4 +45,12 @@ exports.getStockPrediction = async (req, res) => {
         console.log(err)
         return res.status(500).send({ message: err.message })
     }
+}
+
+exports.getPopularStock = (req, res) => {
+    fs.readFile('data/popularStock.json', (err, data) => {
+        if (err) throw err
+        const popularStock = JSON.parse(data)
+        return res.status(200).send(popularStock)
+    })
 }

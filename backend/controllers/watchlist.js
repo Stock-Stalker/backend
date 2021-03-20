@@ -1,43 +1,27 @@
-const { getStock, getUser, checkDuplicate } = require('../utils/watchlist')
+const { getStock, getUser } = require('../utils/watchlist')
 const User = require('../models/user')
-const Symbols = require('../models/symbols')
 
-exports.getwatchlist = async (req, res) => {
+exports.getWatchlist = async (req, res) => {
     try {
         const user = await getUser(req.userId)
-        // TODO: populate this so we don't just get the id reference back
-        res.send(user.watchlist)
+        return res.status(200).send(user.watchlist)
     } catch (err) {
         res.status(403).send({ message: err.message })
     }
 }
 
-exports.addToWatchlist = async (req, res) => {
+exports.updateWatchlist = async (req, res) => {
     try {
+        const targetSymbol = await getStock(req.body.symbol)
         const user = await getUser(req.userId)
-        const stock = await getStock(req.body.symbol)
-        if (!checkDuplicate(stock._id, user.watchlist)) {
-            user.watchlist.unshift(stock)
+        const isExist = await User.findOne({ _id: req.userId, watchlist: targetSymbol })
+        if (isExist) {
+            await user.watchlist.pull({ _id: targetSymbol._id })
+        } else {
+            await user.watchlist.addToSet(targetSymbol)
         }
-        user.save()
-        res.send(user.watchlist)
-    } catch (err) {
-        res.status(403).send({ message: err.message })
-    }
-}
-
-exports.removeFromWatchlist = async (req, res) => {
-    try {
-        const symbolToRemove = await Symbols.findOne({
-            symbol: req.body.symbol
-        })
-        const symbolID = symbolToRemove._id
-        const updatedUser = await User.findByIdAndUpdate(
-            req.userId,
-            { $pull: { watchlist: { _id: symbolID.toString() } } },
-            { new: true }
-        ).populate('watchlist')
-        return res.status(200).send(updatedUser.watchlist)
+        await user.save()
+        return res.status(200).send(user.watchlist)
     } catch (err) {
         return res.status(403).send({ message: err.message })
     }
