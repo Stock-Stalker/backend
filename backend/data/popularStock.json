@@ -1,24 +1,3 @@
 {
-    "popularStock": [
-        {
-            "symbol": "AAPL",
-            "companyName": "Apple, Inc. - Common Stock"
-        },
-        {
-            "symbol": "TSLA",
-            "companyName": "Tesla - Common Stock"
-        },
-        {
-            "symbol": "NFLX",
-            "companyName": "Netflix, Inc. - Common Stock"
-        },
-        {
-            "symbol": "AMZN",
-            "companyName": "Amazon.com, Inc. - Common Stock"
-        },
-        {
-            "symbol": "FB",
-            "companyName": "Facebook, Inc. - Class A Common Stock"
-        }
-    ]
+    "popularStock": ["AAPL", "TSLA", "NFLX", "AMZN", "FB"]
 }

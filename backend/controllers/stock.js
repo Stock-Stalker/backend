@@ -48,7 +48,15 @@ exports.getStockPrediction = async (req, res) => {
 exports.getPopularStock = (req, res) => {
     fs.readFile('data/popularStock.json', (err, data) => {
         if (err) throw err
+        const popularStockData = []
         const popularStock = JSON.parse(data)
-        return res.status(200).send(popularStock)
+        popularStock.forEach((stock) => {
+            // send api request to get currentPrice
+            stock.push({
+                symbol: stock,
+                currentPrice: 0 // will be changed to res
+            })
+        })
+        return res.status(200).send(popularStockData)
     })
 }
