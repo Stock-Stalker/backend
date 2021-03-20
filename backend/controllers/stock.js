@@ -4,7 +4,7 @@ const {
     getHistoricalData,
     getAllStockData,
     getStockPrediction,
-    getStockCurrentPrice
+    getCurrentPrice
 } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
 
@@ -17,14 +17,14 @@ exports.getAllStocks = async (req, res) => {
     }
 }
 
-exports.getStockData = async (req, res) => {
+exports.getOneStock = async (req, res) => {
     const symbol = req.params.symbol.toUpperCase()
     try {
         const companyName =
             (await getCompanyNameFromCache(symbol)) ||
             (await getCompanyName(symbol))
         const historicalData = await getHistoricalData(symbol)
-        const currentPrice = await getStockCurrentPrice(symbol)
+        const currentPrice = await getCurrentPrice(symbol)
         const stockData = {
             symbol,
             companyName,
@@ -47,29 +47,22 @@ exports.getStockPrediction = async (req, res) => {
     }
 }
 
-exports.getPopularStock = (req, res) => {
+exports.getPopularStocks = (req, res) => {
     fs.readFile('data/popularStock.json', (err, data) => {
         if (err) throw err
         const popularStockData = []
         const popularStock = JSON.parse(data)
-        popularStock.forEach((stock) => {
-            // send api request to get currentPrice
-            stock.push({
-                symbol: stock,
-                currentPrice: 0 // will be changed to res
-            })
+        popularStock.forEach(async (stockSymbol) => {
+            try {
+                const currentPrice = await getCurrentPrice(stockSymbol)
+                popularStockData.push({
+                    symbol: stockSymbol,
+                    currentPrice: currentPrice
+                })
+            } catch (err) {
+                console.log(err)
+            }
         })
         return res.status(200).send(popularStockData)
     })
-}
-
-exports.getCurrentPrice = async (req, res) => {
-    try {
-        const symbol = req.params.symbol
-        const price = await getStockCurrentPrice(symbol)
-        return res.status(200).send({ currentPrice: price })
-    } catch (err) {
-        console.log(err)
-        return res.status(404).send({ message: err.message })
-    }
 }
