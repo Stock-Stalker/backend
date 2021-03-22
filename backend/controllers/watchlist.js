@@ -17,7 +17,7 @@ exports.getWatchlist = async (req, res) => {
         }
         if (stocksNeededFromAPI.length > 0) {
             const res = await getPredictionsFromAPI(stocksNeededFromAPI)
-            console.log('PREDICTIONS', res.data)
+            console.log('PREDICTIONS', res)
             // prediction
             //     ? (stock.prediction = prediction.data)
             //     : stocksNeededFromAPI.push(stock.symbol)
