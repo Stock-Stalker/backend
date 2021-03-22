@@ -18,18 +18,30 @@ const userSchema = new Schema(
 )
 
 userSchema.pre('findOne', (next) => {
-    this.populate('watchlist')
-    next()
+    if (!this.watchlist) {
+        next()
+    } else {
+        this.populate('watchlist')
+        next()
+    }
 })
 
 userSchema.pre('findOne', (next) => {
-    this.populate('watchlist')
-    next()
+    if (!this.watchlist) {
+        next()
+    } else {
+        this.populate('watchlist')
+        next()
+    }
 })
 
 userSchema.pre('findByIdAndUpdate', (next) => {
-    this.populate('watchlist')
-    next()
+    if (!this.watchlist) {
+        next()
+    } else {
+        this.populate('watchlist')
+        next()
+    }
 })
 
 module.exports = mongoose.model('User', userSchema)

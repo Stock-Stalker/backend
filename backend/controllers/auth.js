@@ -45,7 +45,7 @@ exports.signUpUser = async (req, res) => {
             token: token
         })
     } catch (err) {
-        return res.status(500).json(err)
+        return res.status(500).json(err.message)
     }
 }
 
