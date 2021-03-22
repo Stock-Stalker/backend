@@ -1,3 +1,4 @@
+const { getPrediction } = require('../utils/stock')
 const User = require('../models/user')
 const Symbol = require('../models/symbols')
 
@@ -6,7 +7,7 @@ exports.getWatchlist = async (req, res) => {
         const user = await User.findOne({ _id: req.userId })
         const watchlist = JSON.parse(JSON.stringify(user.watchlist))
         for (const stock of watchlist) {
-            const prediction = await getStockPrediction(stock.symbol)
+            const prediction = await getPrediction(stock.symbol)
             stock.prediction = prediction.data
         }
         return res.status(200).send(watchlist)
@@ -17,7 +18,9 @@ exports.getWatchlist = async (req, res) => {
 
 exports.updateWatchlist = async (req, res) => {
     try {
-        const stock = await Symbol.findOne({ symbol: req.body.symbol.toUpperCase() })
+        const stock = await Symbol.findOne({
+            symbol: req.body.symbol.toUpperCase()
+        })
         let user = await User.findOne({ _id: req.userId, watchlist: stock })
         if (user) {
             await user.watchlist.pull({ _id: stock._id })
