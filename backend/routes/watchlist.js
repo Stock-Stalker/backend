@@ -8,8 +8,6 @@ const isAuth = require('../middleware/isAuth')
 
 router.get('/', isAuth, watchlistController.getWatchlist)
 
-router.patch('/', isAuth, watchlistController.addToWatchlist)
-
-router.patch('/remove', isAuth, watchlistController.removeFromWatchlist)
+router.patch('/', isAuth, watchlistController.updateWatchlist)
 
 module.exports = router

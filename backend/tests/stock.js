@@ -43,4 +43,24 @@ describe('Stocks endpoints', function () {
             return done()
         })
     })
+    it('should return the prediction of a stock ', function (done) {
+        agent.get('/api/stocks/prediction/AAPL').end((err, res) => {
+            if (err) {
+                return done(err)
+            }
+            res.status.should.be.equal(200)
+            expect(parseFloat(res.body.prediction)).to.be.an('Number')
+            return done()
+        })
+    })
+    it('should return the current price of a stock ', function (done) {
+        agent.get('/api/stocks/current-price/AAPL').end((err, res) => {
+            if (err) {
+                return done(err)
+            }
+            res.status.should.be.equal(200)
+            expect(parseFloat(res.body.currentPrice)).to.be.an('Number')
+            return done()
+        })
+    })
 })

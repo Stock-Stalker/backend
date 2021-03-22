@@ -46,7 +46,6 @@ describe('Watchlist API endpoints', function () {
                     .set('Authorization', `Bearer ${token}`)
                     .send({ symbol: 'AAPL' })
                     .then(function (res) {
-                        console.log(res.body)
                         done()
                     })
                     .catch(function (err) {
@@ -67,7 +66,7 @@ describe('Watchlist API endpoints', function () {
         })
     })
 
-    it('should add a stock into users watchlist', function (done) {
+    it("should add a stock if the  it's not in the watchlist", function (done) {
         let initialCount = 0
         chai.request(app)
             .get('/api/user/watchlist')
@@ -83,6 +82,7 @@ describe('Watchlist API endpoints', function () {
                             .get('/api/user/watchlist')
                             .set('Authorization', `Bearer ${token}`)
                             .then(function (res) {
+                                res.status.should.be.equal(200)
                                 expect(res.body.length).to.be.equal(
                                     initialCount + 1
                                 )
@@ -93,17 +93,9 @@ describe('Watchlist API endpoints', function () {
                                 done()
                             })
                     })
-                    .catch(function (err) {
-                        console.log(err)
-                        done()
-                    })
-            })
-            .catch(function (err) {
-                console.log(err)
-                done()
             })
     })
-    it('should remove a stock from users watchlist', function (done) {
+    it('should remove a stock if it already exists in the watchlist', function (done) {
         let initialCount = 0
         chai.request(app)
             .get('/api/user/watchlist')
@@ -111,14 +103,15 @@ describe('Watchlist API endpoints', function () {
             .then(function (res) {
                 initialCount = res.body.length
                 chai.request(app)
-                    .patch('/api/user/watchlist/remove')
+                    .patch('/api/user/watchlist/')
                     .set('Authorization', `Bearer ${token}`)
-                    .send({ symbol: 'GOOG' })
+                    .send({ symbol: 'AAPL' })
                     .then(function (res) {
                         chai.request(app)
                             .get('/api/user/watchlist')
                             .set('Authorization', `Bearer ${token}`)
                             .then(function (res) {
+                                res.status.should.be.equal(200)
                                 expect(res.body.length).to.be.equal(
                                     initialCount - 1
                                 )
@@ -147,6 +140,7 @@ describe('Watchlist API endpoints', function () {
                 if (err) {
                     done(err)
                 }
+                res.status.should.be.equal(200)
                 expect(res.body).to.be.an('Array')
                 done()
             })
