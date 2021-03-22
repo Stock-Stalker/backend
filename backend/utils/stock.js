@@ -83,8 +83,7 @@ const getPredictionFromAPI = async (symbol) => {
     // Returns predictions from /predictor. Either list of predictions or int:2
     try {
         const res = await axios.get(
-            // `http://stockstalker.tk/predictor/symbol=${symbol}`
-            `http://10.0.0.29:8080/predictor/${symbol}`
+            `http://stockstalker.tk/predictor/${symbol}`
         )
         if (!res.data.data) {
             throw new Error(`Cannot get prediction for ${symbol}`)
@@ -100,14 +99,13 @@ const getPredictionFromAPI = async (symbol) => {
 const getPredictionsFromAPI = async (symbols) => {
     try {
         const res = await axios.get(
-            `http://10.0.0.29:8080/predictor/${symbols.join(',')}`
-            // `http://stockstalker.tk/predictor/symbol=${symbols.join(',')`
+            `http://stockstalker.tk/predictor/${symbols.join(',')}`
         )
-        console.log('IN GET FROM API', res.data)
-        // symbols.forEach((symbol) => {
-        //     client.setex(`${symbol}_predict`, 3600, res.data.symbol)
-        // })
-        return res.data
+        const predictions = res.data
+        for (const symbol in predictions) {
+            client.setex(`${symbol}_predict`, 3600, predictions[symbol])
+        }
+        return predictions
     } catch (err) {
         console.log(err)
         throw err
