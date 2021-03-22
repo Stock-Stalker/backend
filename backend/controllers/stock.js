@@ -51,7 +51,7 @@ exports.getPrediction = async (req, res) => {
         const prediction =
             (await getPredictionFromCache(symbol)) ||
             (await getPredictionFromAPI(symbol))
-        return res.status(200).send(prediction)
+        return res.status(200).send({ prediction })
     } catch (err) {
         console.log(err)
         return res.status(500).send({ message: err.message })
