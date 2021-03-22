@@ -83,7 +83,7 @@ const getPredictionFromAPI = async (symbol) => {
     // Returns predictions from /predictor. Either list of predictions or int:2
     try {
         const res = await axios.get(
-            `http://stockstalker.tk/predictor?symbol=${symbol}`
+            `http://10.0.0.29:8080/predictor?symbol=${symbol}`
         )
         if (!res.data.data) {
             throw new Error(`Cannot get prediction for ${symbol}`)
@@ -101,10 +101,10 @@ const getPredictionsFromAPI = async (symbols) => {
         symbols.forEach((symbol) => {
             params.append('symbol', symbol)
         })
-        console.log(`http://localhost:8080/predictor?${params}`)
+        console.log(`http://10.0.0.29:8080/predictor?${params}`)
         console.log('BEFORE API CALL')
         const res = await axios.get(
-            `http://localhost:8080/predictor?${params}`
+            `http://10.0.0.29:8080/predictor?${params}`
             // `http://stockstalker.tk/predictor?${params}`
         )
         console.log('AFTER API CALL')
