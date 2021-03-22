@@ -132,7 +132,7 @@ const getCurrentPrices = async (symbols) => {
     try {
         const res = await axios.get(
             'https://api.twelvedata.com/price?' +
-                `symbol=${symbols.join('')}&` +
+                `symbol=${symbols.join(',')}&` +
                 `apikey=${process.env.STOCK_DATA_API}`
         )
         if (!res.data) {
