@@ -1,6 +1,5 @@
-const { getStockPrediction } = require('../utils/stock')
 const User = require('../models/user')
-const Symbols = require('../models/symbols')
+const Symbol = require('../models/symbols')
 
 exports.getWatchlist = async (req, res) => {
     try {
@@ -18,15 +17,11 @@ exports.getWatchlist = async (req, res) => {
 
 exports.updateWatchlist = async (req, res) => {
     try {
-        const symbol = req.body.symbol.toUpperCase()
-        let user = await User.findOne({
-            _id: req.userId,
-            watchlist: { $elemMatch: { symbol: symbol } }
-        })
+        const stock = await Symbol.findOne({ symbol: req.body.symbol.toUpperCase() })
+        let user = await User.findOne({ _id: req.userId, watchlist: stock })
         if (user) {
-            await user.watchlist.pull({ symbol: symbol })
+            await user.watchlist.pull({ _id: stock._id })
         } else {
-            const stock = await Symbols.findOne({ symbol: symbol })
             user = await User.findOne({ _id: req.userId })
             await user.watchlist.addToSet(stock)
         }
