@@ -92,8 +92,36 @@ const getAllStockData = async () => {
     }
 }
 
+const getStockPrediction = async (symbol) => {
+    // Returns predictions from /predictor. Either list of predictions or int:2
+    try {
+        const p = await axios.get(`http://stockstalker.tk/predictor/${symbol}`)
+        return p.data
+    } catch (err) {
+        return err.message
+    }
+}
+
+const getCurrentPrice = async (symbol) => {
+    try {
+        const res = await axios.get(
+            'https://api.twelvedata.com/price?' +
+                `symbol=${symbol.toUpperCase()}&` +
+                `apikey=${process.env.STOCK_DATA_API}`
+        )
+        if (!res.data.price) {
+            throw new Error(`Cannot find ${symbol}`)
+        }
+        return res.data.price
+    } catch (err) {
+        throw err.message
+    }
+}
+
 module.exports = {
     getCompanyName,
     getHistoricalData,
-    getAllStockData
+    getAllStockData,
+    getStockPrediction,
+    getCurrentPrice
 }
