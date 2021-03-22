@@ -1,9 +1,9 @@
-const { getStock, getUser } = require('../utils/watchlist')
 const User = require('../models/user')
+const Symbol = require('../models/symbols')
 
 exports.getWatchlist = async (req, res) => {
     try {
-        const user = await getUser(req.userId)
+        const user = await User.findOne({ _id: req.userId })
         return res.status(200).send(user.watchlist)
     } catch (err) {
         return res.status(403).send({ message: err.message })
@@ -12,13 +12,13 @@ exports.getWatchlist = async (req, res) => {
 
 exports.updateWatchlist = async (req, res) => {
     try {
-        const targetSymbol = await getStock(req.body.symbol)
-        const user = await getUser(req.userId)
-        const isExist = await User.findOne({ _id: req.userId, watchlist: targetSymbol })
-        if (isExist) {
-            await user.watchlist.pull({ _id: targetSymbol._id })
+        const stock = await Symbol.findOne({ symbol: req.body.symbol.toUpperCase() })
+        let user = await User.findOne({ _id: req.userId, watchlist: stock })
+        if (user) {
+            await user.watchlist.pull({ _id: stock._id })
         } else {
-            await user.watchlist.addToSet(targetSymbol)
+            user = await User.findOne({ _id: req.userId })
+            await user.watchlist.addToSet(stock)
         }
         await user.save()
         return res.status(200).send(user.watchlist)
