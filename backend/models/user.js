@@ -17,17 +17,17 @@ const userSchema = new Schema(
     { timestamps: true }
 )
 
-userSchema.pre('findOne', function (next) {
+userSchema.pre('findOne', (next) => {
     this.populate('watchlist')
     next()
 })
 
-userSchema.pre('findOne', function (next) {
+userSchema.pre('findOne', (next) => {
     this.populate('watchlist')
     next()
 })
 
-userSchema.pre('findByIdAndUpdate', function (next) {
+userSchema.pre('findByIdAndUpdate', (next) => {
     this.populate('watchlist')
     next()
 })

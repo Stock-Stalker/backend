@@ -4,7 +4,12 @@ const Symbol = require('../models/symbols')
 exports.getWatchlist = async (req, res) => {
     try {
         const user = await User.findOne({ _id: req.userId })
-        return res.status(200).send(user.watchlist)
+        const watchlist = JSON.parse(JSON.stringify(user.watchlist))
+        for (const stock of watchlist) {
+            const prediction = await getStockPrediction(stock.symbol)
+            stock.prediction = prediction.data
+        }
+        return res.status(200).send(watchlist)
     } catch (err) {
         return res.status(403).send({ message: err.message })
     }

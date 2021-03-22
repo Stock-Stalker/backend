@@ -102,20 +102,19 @@ const getStockPrediction = async (symbol) => {
     }
 }
 
-const getStockCurrentPrice = async (symbol) => {
+const getCurrentPrice = async (symbol) => {
     try {
-        const targetSymbol = symbol.toUpperCase()
         const res = await axios.get(
             'https://api.twelvedata.com/price?' +
-                `symbol=${targetSymbol}&` +
-                `apikey=${process.env.STOCK_DATA_API}`)
+                `symbol=${symbol.toUpperCase()}&` +
+                `apikey=${process.env.STOCK_DATA_API}`
+        )
         if (!res.data.price) {
-            throw new Error('Cannot Find The Symbols')
+            throw new Error(`Cannot find ${symbol}`)
         }
         return res.data.price
     } catch (err) {
-        console.log(err)
-        throw err
+        throw err.message
     }
 }
 
@@ -124,5 +123,5 @@ module.exports = {
     getHistoricalData,
     getAllStockData,
     getStockPrediction,
-    getStockCurrentPrice
+    getCurrentPrice
 }

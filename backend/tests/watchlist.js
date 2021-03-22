@@ -66,7 +66,7 @@ describe('Watchlist API endpoints', function () {
         })
     })
 
-    it('should add a stock if the  it\'s not in the watchlist', function (done) {
+    it("should add a stock if the  it's not in the watchlist", function (done) {
         let initialCount = 0
         chai.request(app)
             .get('/api/user/watchlist')
