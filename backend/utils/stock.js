@@ -82,11 +82,14 @@ const getAllCompanyNames = async () => {
 const getPredictionFromAPI = async (symbol) => {
     // Returns predictions from /predictor. Either list of predictions or int:2
     try {
-        const prediction = await axios.get(
+        const res = await axios.get(
             `http://stockstalker.tk/predictor/${symbol}`
         )
-        client.setex(`${symbol}_predict`, 3600, prediction.data.data)
-        return prediction.data
+        if (!res.data.data) {
+            throw new Error(`Cannot get prediction for ${symbol}`)
+        }
+        client.setex(`${symbol}_predict`, 3600, res.data.data)
+        return res.data.data
     } catch (err) {
         throw err.message
     }
