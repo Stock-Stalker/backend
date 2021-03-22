@@ -101,12 +101,14 @@ const getPredictionsFromAPI = async (symbols) => {
         symbols.forEach((symbol) => {
             params.append('symbol', symbol)
         })
-        const predictions = await axios.get(
+        console.log(`http://localhost:8080/predictor/${params}`)
+        const res = await axios.get(
             `http://localhost:8080/predictor/${params}`
             // `http://stockstalker.tk/predictor/${params}`
         )
+        console.log('IN GET FROM API', res)
         // for loop on data to save in cache
-        return predictions.data
+        return res.data
     } catch (err) {
         throw err.message
     }
