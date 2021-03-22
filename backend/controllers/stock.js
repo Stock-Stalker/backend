@@ -2,7 +2,7 @@ const {
     getCompanyName,
     getHistoricalData,
     getAllStockData,
-    getStockPrediction,
+    getPrediction,
     getCurrentPrice
 } = require('../utils/stock')
 const { getCompanyNameFromCache } = require('../utils/cache')
@@ -24,7 +24,7 @@ exports.getOneStock = async (req, res) => {
             (await getCompanyName(symbol))
         const historicalData = await getHistoricalData(symbol)
         const currentPrice = await getCurrentPrice(symbol)
-        let prediction = await getStockPrediction(symbol)
+        let prediction = await getPrediction(symbol)
         prediction = prediction.data
         const stockData = {
             symbol,
@@ -39,9 +39,9 @@ exports.getOneStock = async (req, res) => {
     }
 }
 
-exports.getStockPrediction = async (req, res) => {
+exports.getPrediction = async (req, res) => {
     try {
-        const prediction = await getStockPrediction(req.params.symbol)
+        const prediction = await getPrediction(req.params.symbol)
         return res.status(200).send(prediction)
     } catch (err) {
         console.log(err)
