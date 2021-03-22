@@ -83,8 +83,8 @@ const getPredictionFromAPI = async (symbol) => {
     // Returns predictions from /predictor. Either list of predictions or int:2
     try {
         const res = await axios.get(
-            // `http://stockstalker.tk/predictor?symbol=${symbol}`
-            `http://10.0.0.29:8080/predictor?symbol=${symbol}`
+            // `http://stockstalker.tk/predictor/symbol=${symbol}`
+            `http://10.0.0.29:8080/predictor/symbol=${symbol}`
         )
         if (!res.data.data) {
             throw new Error(`Cannot get prediction for ${symbol}`)
@@ -99,13 +99,9 @@ const getPredictionFromAPI = async (symbol) => {
 
 const getPredictionsFromAPI = async (symbols) => {
     try {
-        const params = new URLSearchParams()
-        symbols.forEach((symbol) => {
-            params.append('symbol', symbol)
-        })
         const res = await axios.get(
-            `http://10.0.0.29:8080/predictor?${params}`
-            // `http://stockstalker.tk/predictor?${params}`
+            `http://10.0.0.29:8080/predictor/symbol=${symbols.join(',')}`
+            // `http://stockstalker.tk/predictor/symbol=${symbols.join(',')`
         )
         console.log('IN GET FROM API', res.data)
         // symbols.forEach((symbol) => {
