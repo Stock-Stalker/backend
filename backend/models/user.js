@@ -17,31 +17,19 @@ const userSchema = new Schema(
     { timestamps: true }
 )
 
-userSchema.pre('findOne', (next) => {
-    if (!this.watchlist) {
-        next()
-    } else {
-        this.populate('watchlist')
-        next()
-    }
+userSchema.pre('findOne', function (next) {
+    this.populate('watchlist')
+    next()
 })
 
-userSchema.pre('findOne', (next) => {
-    if (!this.watchlist) {
-        next()
-    } else {
-        this.populate('watchlist')
-        next()
-    }
+userSchema.pre('findOne', function (next) {
+    this.populate('watchlist')
+    next()
 })
 
-userSchema.pre('findByIdAndUpdate', (next) => {
-    if (!this.watchlist) {
-        next()
-    } else {
-        this.populate('watchlist')
-        next()
-    }
+userSchema.pre('findByIdAndUpdate', function (next) {
+    this.populate('watchlist')
+    next()
 })
 
 module.exports = mongoose.model('User', userSchema)
