@@ -6,23 +6,22 @@ const Symbol = require('../models/symbols')
 exports.getWatchlist = async (req, res) => {
     try {
         const user = await User.findOne({ _id: req.userId })
-        const watchlist = JSON.parse(JSON.stringify(user.watchlist))
+        const { watchlist } = user
         const stocksNeededFromAPI = []
         for (const stock of watchlist) {
             const prediction = await getPredictionFromCache(stock.symbol)
-            console.log('FOR LOOP', prediction)
             prediction
-                ? (stock.prediction = prediction.data)
+                ? (stock.prediction = prediction)
                 : stocksNeededFromAPI.push(stock.symbol)
         }
         if (stocksNeededFromAPI.length > 0) {
-            const res = await getPredictionsFromAPI(stocksNeededFromAPI)
-            console.log('PREDICTIONS', res)
-            // prediction
-            //     ? (stock.prediction = prediction.data)
-            //     : stocksNeededFromAPI.push(stock.symbol)
+            const predictions = await getPredictionsFromAPI(stocksNeededFromAPI)
+            for (const stock of watchlist) {
+                if (!stock.prediction) {
+                    stock.prediction = predictions[stock.symbol]
+                }
+            }
         }
-        console.log('WATCHLIST', watchlist)
         return res.status(200).send(watchlist)
     } catch (err) {
         return res.status(403).send({ message: err.message })
