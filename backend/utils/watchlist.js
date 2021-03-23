@@ -17,7 +17,7 @@ const updateWatchlistDetails = async (user) => {
         predictions = await getPredictionsFromAPI(stocksNeededFromAPI)
     }
     for (const stock of user.watchlist) {
-        if (currentPrices.price) {
+        if (currentPrices && currentPrices.price) {
             stock.currentPrice = currentPrices.price
         } else {
             stock.currentPrice = currentPrices[`${stock.symbol}`].price
