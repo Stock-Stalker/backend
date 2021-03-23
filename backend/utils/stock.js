@@ -85,11 +85,11 @@ const getPredictionFromAPI = async (symbol) => {
         const res = await axios.get(
             `http://stockstalker.tk/predictor/${symbol}`
         )
-        if (!res.data.data) {
+        if (!res.data) {
             throw new Error(`Cannot get prediction for ${symbol}`)
         }
-        client.setex(`${symbol}_predict`, 3600, res.data.data)
-        return res.data.data
+        client.setex(`${symbol}_predict`, 3600, res.data[`${symbol}`])
+        return res.data[`${symbol}`]
     } catch (err) {
         console.log(err)
         throw err
