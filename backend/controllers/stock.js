@@ -61,7 +61,13 @@ exports.getPrediction = async (req, res) => {
 exports.getPopularStocks = async (req, res) => {
     const popularStockSymbols = ['AAPL', 'TSLA', 'NFLX', 'AMZN', 'FB']
     try {
-        const popularStockData = await getCurrentPrices(popularStockSymbols)
+        const currentPriceData = await getCurrentPrices(popularStockSymbols)
+        const popularStockData = []
+        for (const stock in currentPriceData) {
+            popularStockData.push({
+                [stock]: currentPriceData[stock].price
+            })
+        }
         return res.status(200).send(popularStockData)
     } catch (err) {
         return res.status(500).send({ message: err.message })
