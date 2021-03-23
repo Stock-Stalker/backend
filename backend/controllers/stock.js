@@ -70,7 +70,7 @@ exports.getPopularStocks = async (req, res) => {
                 currentPrice: currentPriceData[stock].price,
                 prediction: 2
             })
-            const prediction = await getPredictionFromCache(stock.symbol)
+            const prediction = await getPredictionFromCache(stock)
             prediction
                 ? (stock.prediction = prediction)
                 : predictionsNeededFromAPI.push(stock)

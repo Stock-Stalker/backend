@@ -151,5 +151,5 @@ module.exports = {
     getPredictionFromAPI,
     getPredictionsFromAPI,
     getCurrentPrice,
-    getCurrentPrices
+    getCurrentPrices,
 }
