@@ -1,10 +1,10 @@
 const { getCurrentPrices, getPredictionsFromAPI } = require('./stock')
 const { getPredictionFromCache } = require('./cache')
 
-const updateWatchlistDetails = async (user, watchlist) => {
+const updateWatchlistDetails = async (user) => {
     const stocksNeededFromAPI = []
     const watchlistSymbolList = []
-    for (const stock of watchlist) {
+    for (const stock of user.watchlist) {
         watchlistSymbolList.push(stock.symbol)
         const prediction = await getPredictionFromCache(stock.symbol)
         prediction
@@ -14,12 +14,17 @@ const updateWatchlistDetails = async (user, watchlist) => {
     const currentPrices = await getCurrentPrices(watchlistSymbolList)
     let predictions
     if (stocksNeededFromAPI.length > 0) {
+        console.log(stocksNeededFromAPI)
         predictions = await getPredictionsFromAPI(stocksNeededFromAPI)
     }
-    for (const stock of watchlist) {
-        stock.currentPrice = currentPrices[stock.symbol].price
-        if (predictions[stock.symbol]) {
-            stock.prediction = predictions[stock.symbol]
+    for (const stock of user.watchlist) {
+        if (currentPrices.price) {
+            stock.currentPrice = currentPrices.price
+        } else {
+            stock.currentPrice = currentPrices[`${stock.symbol}`].price
+        }
+        if (predictions && predictions[`${stock.symbol}`]) {
+            stock.prediction = predictions[`${stock.symbol}`]
         }
     }
     await user.save()
