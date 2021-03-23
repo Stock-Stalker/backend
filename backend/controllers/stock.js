@@ -1,15 +1,19 @@
 const {
-    getCompanyName,
+    getCompanyNameFromDB,
     getHistoricalData,
-    getAllStockData,
-    getPrediction,
-    getCurrentPrice
+    getAllCompanyNames,
+    getPredictionFromAPI,
+    getCurrentPrice,
+    getCurrentPrices
 } = require('../utils/stock')
-const { getCompanyNameFromCache } = require('../utils/cache')
+const {
+    getCompanyNameFromCache,
+    getPredictionFromCache
+} = require('../utils/cache')
 
 exports.getAllStocks = async (req, res) => {
     try {
-        const stockData = await getAllStockData()
+        const stockData = await getAllCompanyNames()
         return res.status(200).send(stockData)
     } catch (err) {
         return res.status(500).send({ message: err.message })
@@ -21,10 +25,12 @@ exports.getOneStock = async (req, res) => {
     try {
         const companyName =
             (await getCompanyNameFromCache(symbol)) ||
-            (await getCompanyName(symbol))
+            (await getCompanyNameFromDB(symbol))
         const historicalData = await getHistoricalData(symbol)
         const currentPrice = await getCurrentPrice(symbol)
-        let prediction = await getPrediction(symbol)
+        let prediction =
+            (await getPredictionFromCache(symbol)) ||
+            (await getPredictionFromAPI(symbol))
         prediction = prediction.data
         const stockData = {
             symbol,
@@ -41,8 +47,11 @@ exports.getOneStock = async (req, res) => {
 
 exports.getPrediction = async (req, res) => {
     try {
-        const prediction = await getPrediction(req.params.symbol)
-        return res.status(200).send(prediction)
+        const symbol = req.params.symbol.toUpperCase()
+        const prediction =
+            (await getPredictionFromCache(symbol)) ||
+            (await getPredictionFromAPI(symbol))
+        return res.status(200).send({ prediction })
     } catch (err) {
         console.log(err)
         return res.status(500).send({ message: err.message })
@@ -50,20 +59,9 @@ exports.getPrediction = async (req, res) => {
 }
 
 exports.getPopularStocks = async (req, res) => {
+    const popularStockSymbols = ['AAPL', 'TSLA', 'NFLX', 'AMZN', 'FB']
     try {
-        const popularStockData = []
-        const popularStockSymbols = ['AAPL', 'TSLA', 'NFLX', 'AMZN', 'FB']
-        for (const symbol of popularStockSymbols) {
-            try {
-                const currentPrice = await getCurrentPrice(symbol)
-                popularStockData.push({
-                    symbol: symbol,
-                    currentPrice: currentPrice
-                })
-            } catch (err) {
-                console.log(err)
-            }
-        }
+        const popularStockData = await getCurrentPrices(popularStockSymbols)
         return res.status(200).send(popularStockData)
     } catch (err) {
         return res.status(500).send({ message: err.message })
