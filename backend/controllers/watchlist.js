@@ -1,28 +1,13 @@
-const { getPredictionsFromAPI } = require('../utils/stock')
-const { getPredictionFromCache } = require('../utils/cache')
+const { updateWatchlistDetails } = require('../utils/watchlist')
 const User = require('../models/user')
 const Symbol = require('../models/symbols')
 
 exports.getWatchlist = async (req, res) => {
     try {
-        const user = await User.findOne({ _id: req.userId })
-        const { watchlist } = user
-        const stocksNeededFromAPI = []
-        for (const stock of watchlist) {
-            const prediction = await getPredictionFromCache(stock.symbol)
-            prediction
-                ? (stock.prediction = prediction)
-                : stocksNeededFromAPI.push(stock.symbol)
-        }
-        if (stocksNeededFromAPI.length > 0) {
-            const predictions = await getPredictionsFromAPI(stocksNeededFromAPI)
-            for (const stock of watchlist) {
-                if (!stock.prediction) {
-                    stock.prediction = predictions[stock.symbol]
-                }
-            }
-        }
-        return res.status(200).send(watchlist)
+        let user = await User.findOne({ _id: req.userId })
+        console.log(`user.watchlist: ${user.watchlist}`)
+        user = await updateWatchlistDetails(user)
+        return res.status(200).send(user.watchlist)
     } catch (err) {
         return res.status(403).send({ message: err.message })
     }
@@ -41,6 +26,7 @@ exports.updateWatchlist = async (req, res) => {
             await user.watchlist.addToSet(stock)
         }
         await user.save()
+        user = await updateWatchlistDetails(user)
         return res.status(200).send(user.watchlist)
     } catch (err) {
         return res.status(403).send({ message: err.message })
