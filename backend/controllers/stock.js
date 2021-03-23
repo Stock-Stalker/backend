@@ -3,6 +3,7 @@ const {
     getHistoricalData,
     getAllCompanyNames,
     getPredictionFromAPI,
+    getPredictionsFromAPI,
     getCurrentPrice,
     getCurrentPrices
 } = require('../utils/stock')
@@ -62,10 +63,30 @@ exports.getPopularStocks = async (req, res) => {
     try {
         const currentPriceData = await getCurrentPrices(popularStockSymbols)
         const popularStockData = []
+        const predictionsNeededFromAPI = []
         for (const stock in currentPriceData) {
             popularStockData.push({
-                [stock]: currentPriceData[stock].price
+                symbol: stock,
+                currentPrice: currentPriceData[stock].price,
+                prediction: 2
             })
+            const prediction = await getPredictionFromCache(stock.symbol)
+            prediction
+                ? (stock.prediction = prediction)
+                : predictionsNeededFromAPI.push(stock)
+        }
+        if (predictionsNeededFromAPI.length > 0) {
+            const predictions = await getPredictionsFromAPI(
+                predictionsNeededFromAPI
+            )
+            for (const stock of popularStockData) {
+                if (
+                    predictions &&
+                    predictions[`${stock.symbol}`] !== undefined
+                ) {
+                    stock.prediction = predictions[`${stock.symbol}`]
+                }
+            }
         }
         return res.status(200).send(popularStockData)
     } catch (err) {

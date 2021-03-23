@@ -14,7 +14,6 @@ const updateWatchlistDetails = async (user) => {
     const currentPrices = await getCurrentPrices(watchlistSymbolList)
     let predictions
     if (stocksNeededFromAPI.length > 0) {
-        console.log(stocksNeededFromAPI)
         predictions = await getPredictionsFromAPI(stocksNeededFromAPI)
     }
     for (const stock of user.watchlist) {
