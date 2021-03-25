@@ -10,7 +10,7 @@ const agent = chai.request.agent(app)
 
 describe('Stocks endpoints', function () {
     it('should get all the stock symbols and company names', (done) => {
-        agent.get('/api/stocks').end((err, res) => {
+        agent.get('/api/stock').end((err, res) => {
             if (err) {
                 return done(err)
             }
@@ -21,7 +21,8 @@ describe('Stocks endpoints', function () {
     })
 
     it('should get the stock data', function (done) {
-        agent.get('/api/stocks/AAPL').end((err, res) => {
+        this.timeout(10000)
+        agent.get('/api/stock/AAPL').end((err, res) => {
             if (err) {
                 return done(err)
             }
@@ -35,7 +36,7 @@ describe('Stocks endpoints', function () {
     })
 
     it('should return status 404 when enter invalid symbol', function (done) {
-        agent.get('/api/stocks/AAPLLL').end((err, res) => {
+        agent.get('/api/stock/AAPLLL').end((err, res) => {
             if (err) {
                 return done(err)
             }
@@ -44,22 +45,13 @@ describe('Stocks endpoints', function () {
         })
     })
     it('should return the prediction of a stock ', function (done) {
-        agent.get('/api/stocks/prediction/AAPL').end((err, res) => {
+        this.timeout(10000)
+        agent.get('/api/stock/prediction/AAPL').end((err, res) => {
             if (err) {
                 return done(err)
             }
             res.status.should.be.equal(200)
             expect(parseFloat(res.body.prediction)).to.be.an('Number')
-            return done()
-        })
-    })
-    it('should return the current price of a stock ', function (done) {
-        agent.get('/api/stocks/current-price/AAPL').end((err, res) => {
-            if (err) {
-                return done(err)
-            }
-            res.status.should.be.equal(200)
-            expect(parseFloat(res.body.currentPrice)).to.be.an('Number')
             return done()
         })
     })

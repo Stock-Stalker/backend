@@ -26,6 +26,7 @@ after(function (done) {
 
 const SAMPLE_OBJECT_ID = 'aaaaaaaaaaaa' // 12 byte string
 describe('Watchlist API endpoints', function () {
+    this.timeout(3000)
     // Create a sample user for use in tests.
     beforeEach(function (done) {
         const sampleUser = new User({
@@ -67,6 +68,7 @@ describe('Watchlist API endpoints', function () {
     })
 
     it("should add a stock if the  it's not in the watchlist", function (done) {
+        this.timeout(10000)
         let initialCount = 0
         chai.request(app)
             .get('/api/user/watchlist')
@@ -96,6 +98,7 @@ describe('Watchlist API endpoints', function () {
             })
     })
     it('should remove a stock if it already exists in the watchlist', function (done) {
+        this.timeout(5000)
         let initialCount = 0
         chai.request(app)
             .get('/api/user/watchlist')
@@ -132,17 +135,18 @@ describe('Watchlist API endpoints', function () {
                 done()
             })
     })
-    it('should get all stock data in users watchlist', function (done) {
-        chai.request(app)
-            .get('/api/user/watchlist')
-            .set('Authorization', `Bearer ${token}`)
-            .end(function (err, res) {
-                if (err) {
-                    done(err)
-                }
-                res.status.should.be.equal(200)
-                expect(res.body).to.be.an('Array')
-                done()
-            })
-    })
+
+    // it('should get all stock data in users watchlist', function (done) {
+    //     chai.request(app)
+    //         .get('/api/user/watchlist')
+    //         .set('Authorization', `Bearer ${token}`)
+    //         .end(function (err, res) {
+    //             if (err) {
+    //                 done(err)
+    //             }
+    //             res.status.should.be.equal(200)
+    //             expect(res.body).to.be.an('Array')
+    //             done()
+    //         })
+    // })
 })
