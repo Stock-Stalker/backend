@@ -26,6 +26,7 @@ after(function (done) {
 
 const SAMPLE_OBJECT_ID = 'aaaaaaaaaaaa' // 12 byte string
 describe('Watchlist API endpoints', function () {
+    this.timeout(3000)
     // Create a sample user for use in tests.
     beforeEach(function (done) {
         const sampleUser = new User({
@@ -67,7 +68,7 @@ describe('Watchlist API endpoints', function () {
     })
 
     it("should add a stock if the  it's not in the watchlist", function (done) {
-        this.timeout(5000)
+        this.timeout(6000)
         let initialCount = 0
         chai.request(app)
             .get('/api/user/watchlist')
