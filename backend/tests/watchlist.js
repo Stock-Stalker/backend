@@ -68,7 +68,7 @@ describe('Watchlist API endpoints', function () {
     })
 
     it("should add a stock if the  it's not in the watchlist", function (done) {
-        this.timeout(6000)
+        this.timeout(10000)
         let initialCount = 0
         chai.request(app)
             .get('/api/user/watchlist')

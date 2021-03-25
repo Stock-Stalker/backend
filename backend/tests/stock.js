@@ -21,7 +21,7 @@ describe('Stocks endpoints', function () {
     })
 
     it('should get the stock data', function (done) {
-        this.timeout(3000)
+        this.timeout(10000)
         agent.get('/api/stock/AAPL').end((err, res) => {
             if (err) {
                 return done(err)
@@ -45,7 +45,7 @@ describe('Stocks endpoints', function () {
         })
     })
     it('should return the prediction of a stock ', function (done) {
-        this.timeout(3000)
+        this.timeout(10000)
         agent.get('/api/stock/prediction/AAPL').end((err, res) => {
             if (err) {
                 return done(err)
