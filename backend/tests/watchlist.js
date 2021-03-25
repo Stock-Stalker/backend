@@ -134,18 +134,18 @@ describe('Watchlist API endpoints', function () {
                 done()
             })
     })
-    it('should get all stock data in users watchlist', function (done) {
-        this.timeout(5000)
-        chai.request(app)
-            .get('/api/user/watchlist')
-            .set('Authorization', `Bearer ${token}`)
-            .end(function (err, res) {
-                if (err) {
-                    done(err)
-                }
-                res.status.should.be.equal(200)
-                expect(res.body).to.be.an('Array')
-                done()
-            })
-    })
+
+    // it('should get all stock data in users watchlist', function (done) {
+    //     chai.request(app)
+    //         .get('/api/user/watchlist')
+    //         .set('Authorization', `Bearer ${token}`)
+    //         .end(function (err, res) {
+    //             if (err) {
+    //                 done(err)
+    //             }
+    //             res.status.should.be.equal(200)
+    //             expect(res.body).to.be.an('Array')
+    //             done()
+    //         })
+    // })
 })
