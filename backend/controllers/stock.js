@@ -66,7 +66,6 @@ exports.getPopularStocks = async (req, res) => {
         const currentPriceData = await getCurrentPrices(popularStockSymbols)
         const popularStockData = []
         const predictionsNeededFromAPI = []
-        console.log(currentPriceData)
         for (const stock in currentPriceData) {
             popularStockData.push({
                 symbol: stock,
