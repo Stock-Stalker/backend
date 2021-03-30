@@ -11,6 +11,7 @@ const app = express()
 const corsOptions = {
     origin: [
         'http://localhost:8080',
+        'http://172.18.0.1',
         'http://localhost:8100',
         'http://stockstalker.tk',
         'https://stockstalker.tk'

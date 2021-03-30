@@ -48,7 +48,6 @@ exports.signUpUser = async (req, res) => {
         return res.status(500).json(err.message)
     }
 }
-
 exports.signInUser = async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -84,6 +83,15 @@ exports.signInUser = async (req, res) => {
         return res
             .status(200)
             .json({ message: 'Sign in successful', token: token, user: user })
+    } catch (err) {
+        res.status(500).json({ err })
+    }
+}
+
+exports.refreshToken = async (req, res) => {
+    try {
+        const { refreshToken } = req.body
+        console.log(refreshToken)
     } catch (err) {
         res.status(500).json({ err })
     }

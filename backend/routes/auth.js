@@ -52,4 +52,5 @@ router.post(
     authController.signInUser
 )
 
+router.post('/refresh', authController.refreshToken)
 module.exports = router
