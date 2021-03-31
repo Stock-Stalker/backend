@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const process = require('process')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const Tokens = require('../models/tokens')
 
 const { validationResult } = require('express-validator')
 
@@ -37,6 +38,20 @@ exports.signUpUser = async (req, res) => {
                 expiresIn: '1h'
             }
         )
+        const refreshToken = jwt.sign(
+            {
+                username: user.username,
+                userId: user._id.toString()
+            },
+            process.env.SECRET_KEY,
+            {
+                expiresIn: '1d'
+            }
+        )
+
+        const newUserRefreshToken = new Tokens({ _userId: user._id, token: refreshToken })
+        await newUserRefreshToken.save()
+
         return res.status(200).json({
             message: 'Sign up successful!',
             user: {
@@ -80,6 +95,24 @@ exports.signInUser = async (req, res) => {
                 expiresIn: '1h'
             }
         )
+        const refreshToken = jwt.sign(
+            {
+                username: user.username,
+                userId: user._id.toString()
+            },
+            process.env.SECRET_KEY,
+            {
+                expiresIn: '1d'
+            }
+        )
+        const userRefreshToken = await Tokens.findOne({ _userId: user._id })
+        if (userRefreshToken) {
+            userRefreshToken.token = refreshToken
+            await userRefreshToken.save()
+        } else {
+            const newUserRefreshToken = new Tokens({ _userId: user._id, token: refreshToken })
+            await newUserRefreshToken.save()
+        }
         return res
             .status(200)
             .json({ message: 'Sign in successful', token: token, user: user })
@@ -90,8 +123,28 @@ exports.signInUser = async (req, res) => {
 
 exports.refreshToken = async (req, res) => {
     try {
-        const { refreshToken } = req.body
-        console.log(refreshToken)
+        const token = await Tokens.findOne({ _userId: req.userId })
+        const refreshToken = token.token
+        // verify the refresh token
+        try {
+            jwt.verify(refreshToken, process.env.SECRET_KEY)
+        } catch (err) {
+            return res.status(401).send({ message: 'Invalid Token' })
+        }
+        const user = await User.findById(req.userId)
+        const newToken = jwt.sign(
+            {
+                username: user.username,
+                userId: user._id.toString()
+            },
+            process.env.SECRET_KEY,
+            {
+                expiresIn: '1h'
+            }
+        )
+        res
+            .status(200)
+            .json({ message: 'New Token Generated', token: newToken, user: user })
     } catch (err) {
         res.status(500).json({ err })
     }

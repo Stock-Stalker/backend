@@ -6,6 +6,8 @@ const authController = require('../controllers/auth')
 
 const router = express.Router()
 
+const isAuth = require('../middleware/isAuth')
+
 router.post(
     '/signup',
     [
@@ -52,5 +54,5 @@ router.post(
     authController.signInUser
 )
 
-router.post('/refresh', authController.refreshToken)
+router.post('/refresh', isAuth, authController.refreshToken)
 module.exports = router
