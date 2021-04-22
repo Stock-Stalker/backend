@@ -8,17 +8,17 @@ const { describe, it, before, after } = require('mocha')
 chai.use(chaiHttp)
 const agent = chai.request.agent(app)
 
-before(function () {
-    return mongoose.connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useFindAndModify: false,
-        useCreateIndex: true
-    })
-})
-
-after(function (done) {
-    return mongoose.disconnect(done)
-})
+// before(function () {
+//     return mongoose.connect(process.env.MONGODB_URI, {
+//         useNewUrlParser: true,
+//         useFindAndModify: false,
+//         useCreateIndex: true
+//     })
+// })
+//
+// after(function (done) {
+//     return mongoose.disconnect(done)
+// })
 
 describe('Stocks endpoints', function () {
     it('should get all the stock symbols and company names', (done) => {
@@ -41,8 +41,9 @@ describe('Stocks endpoints', function () {
             res.should.have.status(200)
             res.body.should.be.an('Object')
             res.body.stockData.historicalData.should.be.an('array')
-            res.body.stockData.symbol.should.be('AAPL')
-            res.body.stockData.companyName.should.be('Apple')
+            console.log(`res.body.stockData.symbol: ${res.body.stockData.symbol}`)
+            res.body.stockData.symbol.should.equal('AAPL')
+            res.body.stockData.companyName.should.equal('Apple')
             return done()
         })
     })

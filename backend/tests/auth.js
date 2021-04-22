@@ -12,17 +12,17 @@ const User = require('../models/user')
 /**
  * root level hooks
  */
-before(function () {
-    return mongoose.connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useFindAndModify: false,
-        useCreateIndex: true
-    })
-})
-
-after(function (done) {
-    return mongoose.disconnect(done)
-})
+// before(function () {
+//     return mongoose.connect(process.env.MONGODB_URI, {
+//         useNewUrlParser: true,
+//         useFindAndModify: false,
+//         useCreateIndex: true
+//     })
+// })
+//
+// after(function (done) {
+//     return mongoose.disconnect(done)
+// })
 
 const SAMPLE_OBJECT_ID = 'aaaaaaaaaaaa' // 12 byte string
 

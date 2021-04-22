@@ -3,6 +3,8 @@ const chaiHttp = require('chai-http')
 const chai = require('chai')
 const mongoose = require('mongoose')
 
+const should = chai.should()
+
 const { describe, it, before, after, beforeEach, afterEach } = require('mocha')
 
 chai.use(chaiHttp)
@@ -48,11 +50,8 @@ describe('Watchlist API endpoints', function () {
                     .patch('/api/user/watchlist')
                     .set('Authorization', `Bearer ${token}`)
                     .send({ symbol: 'AAPL' })
-                    .then(function (res) {
-                        done()
-                    })
-                    .catch(function (err) {
-                        console.log(err)
+                    .end(function (err, res) {
+                      if (err) { done(err) }
                         done()
                     })
             })
@@ -73,82 +72,39 @@ describe('Watchlist API endpoints', function () {
 
     it('should add a stock if the it is not in the watchlist', function (done) {
         this.timeout(10000)
-        let initialCount = 0
+        const initialCount = 1
         chai.request(app)
-            .get('/api/user/watchlist')
-            .set('Authorization', `Bearer ${token}`)
-            .then(function (res) {
-                initialCount = res.body.length
-                chai.request(app)
-                    .patch('/api/user/watchlist')
-                    .set('Authorization', `Bearer ${token}`)
-                    .send({ symbol: 'GOOG' })
-                    .then(function (res) {
-                        chai.request(app)
-                            .get('/api/user/watchlist')
-                            .set('Authorization', `Bearer ${token}`)
-                            .then(function (res) {
-                                res.should.have.status(200)
-                                res.body.length.should.be(
-                                    initialCount + 1
-                                )
-                                done()
-                            })
-                            .catch(function (err) {
-                                console.log(err)
-                                done()
-                            })
-                    })
-                    .catch(function (err) {
-                        console.log(err)
-                        done()
-                    })
-            })
-            .catch(function (err) {
-                console.log(err)
-                done()
-            })
+          .patch('/api/user/watchlist')
+          .set('Authorization', `Bearer ${token}`)
+          .send({ symbol: 'GOOG' })
+          .end(function (err, res) {
+            if (err) { done(err) }
+            console.log(`RES: ${res}`)
+            res.should.have.status(200)
+            // res.body.length.should.be(
+            //     initialCount + 1
+            // )
+            done()
+          })
     })
 
     it('should remove a stock if it already exists in the watchlist', function (done) {
         this.timeout(5000)
-        let initialCount = 0
+        let initialCount = 1
         chai.request(app)
-            .get('/api/user/watchlist')
-            .set('Authorization', `Bearer ${token}`)
-            .then(function (res) {
-                initialCount = res.body.length
-                chai.request(app)
-                    .patch('/api/user/watchlist/')
-                    .set('Authorization', `Bearer ${token}`)
-                    .send({ symbol: 'AAPL' })
-                    .then(function (res) {
-                        chai.request(app)
-                            .get('/api/user/watchlist')
-                            .set('Authorization', `Bearer ${token}`)
-                            .then(function (res) {
-                                res.should.have.status(200)
-                                res.body.length.should.be(
-                                    initialCount - 1
-                                )
-                                done()
-                            })
-                            .catch(function (err) {
-                                console.log(err)
-                                done()
-                            })
-                    })
-                    .catch(function (err) {
-                        console.log(err)
-                        done()
-                    })
-            })
-            .catch(function (err) {
-                console.log(err)
-                done()
-            })
+          .patch('/api/user/watchlist/')
+          .set('Authorization', `Bearer ${token}`)
+          .send({ symbol: 'AAPL' })
+          .end(function (err, res) {
+            if (err) { done(err) }
+            res.should.have.status(200)
+            res.body.length.should.equal(
+                initialCount - 1
+            )
+            done()
     })
-
+  })
+})
     // it('should get all stock data in users watchlist', function (done) {
     //     chai.request(app)
     //         .get('/api/user/watchlist')
@@ -162,4 +118,3 @@ describe('Watchlist API endpoints', function () {
     //             done()
     //         })
     // })
-})

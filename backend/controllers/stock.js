@@ -39,6 +39,7 @@ exports.getOneStock = async (req, res) => {
             prediction,
             historicalData
         }
+        console.log(`stockData: ${stockData}`)
         return res.status(200).send({ stockData })
     } catch (err) {
         return res.status(404).send({ message: err.message })
