@@ -13,7 +13,6 @@ const {
 } = require('../utils/cache')
 
 exports.getAllStocks = async (req, res) => {
-    console.log('\n/stock\n')
     try {
         const stockData = await getAllCompanyNames()
         return res.status(200).send(stockData)
@@ -23,7 +22,6 @@ exports.getAllStocks = async (req, res) => {
 }
 
 exports.getOneStock = async (req, res) => {
-    console.log('\ngetOneStock\n')
     const symbol = req.params.symbol.toUpperCase()
     try {
         const companyName =
@@ -55,7 +53,6 @@ exports.getPrediction = async (req, res) => {
             (await getPredictionFromAPI(symbol))
         return res.status(200).send({ prediction })
     } catch (err) {
-        console.log(err)
         return res.status(500).send({ message: err.message })
     }
 }
