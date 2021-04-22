@@ -30,10 +30,10 @@ mongoose
     .connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useFindAndModify: false
+        useFindAndModify: false,
+        useCreateIndex: true
     })
     .then((result) => {
-        console.log('CONNECTED')
         app.listen(3000)
     })
     .catch((err) => {
