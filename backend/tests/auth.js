@@ -1,28 +1,12 @@
 const app = require('../app')
 const chaiHttp = require('chai-http')
 const chai = require('chai')
-const mongoose = require('mongoose')
 
-const { describe, it, before, after, beforeEach, afterEach } = require('mocha')
+const { describe, it, beforeEach, afterEach } = require('mocha')
 
 chai.use(chaiHttp)
 
 const User = require('../models/user')
-
-/**
- * root level hooks
- */
-// before(function () {
-//     return mongoose.connect(process.env.MONGODB_URI, {
-//         useNewUrlParser: true,
-//         useFindAndModify: false,
-//         useCreateIndex: true
-//     })
-// })
-//
-// after(function (done) {
-//     return mongoose.disconnect(done)
-// })
 
 const SAMPLE_OBJECT_ID = 'aaaaaaaaaaaa' // 12 byte string
 

@@ -1,32 +1,16 @@
 const app = require('../app')
 const chaiHttp = require('chai-http')
 const chai = require('chai')
-const mongoose = require('mongoose')
 
 const should = chai.should()
 
-const { describe, it, before, after, beforeEach, afterEach } = require('mocha')
+const { describe, it, beforeEach, afterEach } = require('mocha')
 
 chai.use(chaiHttp)
 
 const User = require('../models/user')
 
 let token
-
-/**
- * root level hooks
- */
-// before(function () {
-//     return mongoose.connect(process.env.MONGODB_URI, {
-//         useNewUrlParser: true,
-//         useFindAndModify: false,
-//         useCreateIndex: true
-//     })
-// })
-//
-// after(function (done) {
-//     return mongoose.disconnect(done)
-// })
 
 const SAMPLE_OBJECT_ID = 'aaaaaaaaaaaa' // 12 byte string
 describe('Watchlist API endpoints', function () {
@@ -51,7 +35,7 @@ describe('Watchlist API endpoints', function () {
                     .set('Authorization', `Bearer ${token}`)
                     .send({ symbol: 'AAPL' })
                     .end(function (err, res) {
-                      if (err) { done(err) }
+                        if (err) { done(err) }
                         done()
                     })
             })
@@ -74,47 +58,46 @@ describe('Watchlist API endpoints', function () {
         this.timeout(10000)
         const initialCount = 1
         chai.request(app)
-          .patch('/api/user/watchlist')
-          .set('Authorization', `Bearer ${token}`)
-          .send({ symbol: 'GOOG' })
-          .end(function (err, res) {
-            if (err) { done(err) }
-            console.log(`RES: ${res}`)
-            res.should.have.status(200)
-            // res.body.length.should.be(
-            //     initialCount + 1
-            // )
-            done()
-          })
+            .patch('/api/user/watchlist')
+            .set('Authorization', `Bearer ${token}`)
+            .send({ symbol: 'GOOG' })
+            .end(function (err, res) {
+                if (err) { done(err) }
+                res.should.have.status(200)
+                res.body.length.should.equal(
+                    initialCount + 1
+                )
+                done()
+            })
     })
 
     it('should remove a stock if it already exists in the watchlist', function (done) {
         this.timeout(5000)
-        let initialCount = 1
+        const initialCount = 1
         chai.request(app)
-          .patch('/api/user/watchlist/')
-          .set('Authorization', `Bearer ${token}`)
-          .send({ symbol: 'AAPL' })
-          .end(function (err, res) {
-            if (err) { done(err) }
-            res.should.have.status(200)
-            res.body.length.should.equal(
-                initialCount - 1
-            )
-            done()
+            .patch('/api/user/watchlist/')
+            .set('Authorization', `Bearer ${token}`)
+            .send({ symbol: 'AAPL' })
+            .end(function (err, res) {
+                if (err) { done(err) }
+                res.should.have.status(200)
+                res.body.length.should.equal(
+                    initialCount - 1
+                )
+                done()
+            })
     })
-  })
 })
-    // it('should get all stock data in users watchlist', function (done) {
-    //     chai.request(app)
-    //         .get('/api/user/watchlist')
-    //         .set('Authorization', `Bearer ${token}`)
-    //         .end(function (err, res) {
-    //             if (err) {
-    //                 done(err)
-    //             }
-    //             res.status.should.be.equal(200)
-    //             res.body.should.be.an('Array')
-    //             done()
-    //         })
-    // })
+// it('should get all stock data in users watchlist', function (done) {
+//     chai.request(app)
+//         .get('/api/user/watchlist')
+//         .set('Authorization', `Bearer ${token}`)
+//         .end(function (err, res) {
+//             if (err) {
+//                 done(err)
+//             }
+//             res.status.should.be.equal(200)
+//             res.body.should.be.an('Array')
+//             done()
+//         })
+// })
