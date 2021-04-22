@@ -3,26 +3,28 @@ const chaiHttp = require('chai-http')
 const chai = require('chai')
 const mongoose = require('mongoose')
 
-const should = chai.should()
-const { expect } = chai
+const { describe, it, before, after, beforeEach, afterEach } = require('mocha')
 
 chai.use(chaiHttp)
-const agent = chai.request.agent(app)
 
 const User = require('../models/user')
-const Symbols = require('../models/symbols')
 
 let token
 
 /**
  * root level hooks
  */
-after(function (done) {
-    mongoose.models = {}
-    mongoose.modelSchemas = {}
-    mongoose.connection.close()
-    done()
-})
+// before(function () {
+//     return mongoose.connect(process.env.MONGODB_URI, {
+//         useNewUrlParser: true,
+//         useFindAndModify: false,
+//         useCreateIndex: true
+//     })
+// })
+//
+// after(function (done) {
+//     return mongoose.disconnect(done)
+// })
 
 const SAMPLE_OBJECT_ID = 'aaaaaaaaaaaa' // 12 byte string
 describe('Watchlist API endpoints', function () {
@@ -33,7 +35,7 @@ describe('Watchlist API endpoints', function () {
             username: 'myuser',
             password: 'mypassword',
             watchlist: [],
-            _id: SAMPLE_OBJECT_ID,
+            _id: SAMPLE_OBJECT_ID
         })
         chai.request(app)
             .post('/api/user/signup')
@@ -54,20 +56,22 @@ describe('Watchlist API endpoints', function () {
                         done()
                     })
             })
+    })
+
+    // Delete sample user.
+    afterEach(function (done) {
+        User
+            .deleteMany({ username: 'myuser' })
+            .then(function () {
+                done()
+            })
             .catch(function (err) {
                 console.log(err)
                 done()
             })
     })
 
-    // Delete sample user.
-    afterEach(function (done) {
-        User.deleteMany({ username: 'myuser' }).then(function () {
-            done()
-        })
-    })
-
-    it("should add a stock if the  it's not in the watchlist", function (done) {
+    it('should add a stock if the it is not in the watchlist', function (done) {
         this.timeout(10000)
         let initialCount = 0
         chai.request(app)
@@ -84,8 +88,8 @@ describe('Watchlist API endpoints', function () {
                             .get('/api/user/watchlist')
                             .set('Authorization', `Bearer ${token}`)
                             .then(function (res) {
-                                res.status.should.be.equal(200)
-                                expect(res.body.length).to.be.equal(
+                                res.should.have.status(200)
+                                res.body.length.should.be(
                                     initialCount + 1
                                 )
                                 done()
@@ -95,8 +99,17 @@ describe('Watchlist API endpoints', function () {
                                 done()
                             })
                     })
+                    .catch(function (err) {
+                        console.log(err)
+                        done()
+                    })
+            })
+            .catch(function (err) {
+                console.log(err)
+                done()
             })
     })
+
     it('should remove a stock if it already exists in the watchlist', function (done) {
         this.timeout(5000)
         let initialCount = 0
@@ -114,8 +127,8 @@ describe('Watchlist API endpoints', function () {
                             .get('/api/user/watchlist')
                             .set('Authorization', `Bearer ${token}`)
                             .then(function (res) {
-                                res.status.should.be.equal(200)
-                                expect(res.body.length).to.be.equal(
+                                res.should.have.status(200)
+                                res.body.length.should.be(
                                     initialCount - 1
                                 )
                                 done()
@@ -145,7 +158,7 @@ describe('Watchlist API endpoints', function () {
     //                 done(err)
     //             }
     //             res.status.should.be.equal(200)
-    //             expect(res.body).to.be.an('Array')
+    //             res.body.should.be.an('Array')
     //             done()
     //         })
     // })

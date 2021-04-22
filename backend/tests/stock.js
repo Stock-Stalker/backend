@@ -1,12 +1,24 @@
 const app = require('../app')
 const chaiHttp = require('chai-http')
 const chai = require('chai')
+const mongoose = require('mongoose')
 
-const should = chai.should()
-const { expect } = chai
+const { describe, it, before, after } = require('mocha')
 
 chai.use(chaiHttp)
 const agent = chai.request.agent(app)
+
+before(function () {
+    return mongoose.connect(process.env.MONGODB_URI, {
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useCreateIndex: true
+    })
+})
+
+after(function (done) {
+    return mongoose.disconnect(done)
+})
 
 describe('Stocks endpoints', function () {
     it('should get all the stock symbols and company names', (done) => {
@@ -14,8 +26,8 @@ describe('Stocks endpoints', function () {
             if (err) {
                 return done(err)
             }
-            res.status.should.be.equal(200)
-            expect(res.body).to.be.an('array')
+            res.should.have.status(200)
+            res.body.should.be.an('array')
             return done()
         })
     })
@@ -26,11 +38,11 @@ describe('Stocks endpoints', function () {
             if (err) {
                 return done(err)
             }
-            res.status.should.be.equal(200)
-            expect(res.body).to.be.an('Object')
-            expect(res.body.stockData.historicalData).to.be.an('array')
-            expect(res.body.stockData.symbol).to.be.equal('AAPL')
-            expect(res.body.stockData.companyName).to.be.equal('Apple')
+            res.should.have.status(200)
+            res.body.should.be.an('Object')
+            res.body.stockData.historicalData.should.be.an('array')
+            res.body.stockData.symbol.should.be('AAPL')
+            res.body.stockData.companyName.should.be('Apple')
             return done()
         })
     })
@@ -40,7 +52,7 @@ describe('Stocks endpoints', function () {
             if (err) {
                 return done(err)
             }
-            res.status.should.be.equal(404)
+            res.should.have.status(404)
             return done()
         })
     })
@@ -50,8 +62,8 @@ describe('Stocks endpoints', function () {
             if (err) {
                 return done(err)
             }
-            res.status.should.be.equal(200)
-            expect(parseFloat(res.body.prediction)).to.be.an('Number')
+            res.should.have.status(200)
+            parseFloat(res.body.prediction).should.be.a('Number')
             return done()
         })
     })

@@ -3,24 +3,25 @@ const chaiHttp = require('chai-http')
 const chai = require('chai')
 const mongoose = require('mongoose')
 
-const should = chai.should()
-const { expect } = chai
+const { describe, it, before, after, beforeEach, afterEach } = require('mocha')
 
 chai.use(chaiHttp)
-const agent = chai.request.agent(app)
 
 const User = require('../models/user')
-
-let token
 
 /**
  * root level hooks
  */
+before(function () {
+    return mongoose.connect(process.env.MONGODB_URI, {
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useCreateIndex: true
+    })
+})
+
 after(function (done) {
-    mongoose.models = {}
-    mongoose.modelSchemas = {}
-    mongoose.connection.close()
-    done()
+    return mongoose.disconnect(done)
 })
 
 const SAMPLE_OBJECT_ID = 'aaaaaaaaaaaa' // 12 byte string
@@ -31,7 +32,7 @@ describe('Authentication API endpoints', function () {
         const sampleUser = new User({
             username: 'myuser',
             password: 'mypassword',
-            _id: SAMPLE_OBJECT_ID,
+            _id: SAMPLE_OBJECT_ID
         })
         chai.request(app)
             .post('/api/user/signup')
@@ -41,7 +42,6 @@ describe('Authentication API endpoints', function () {
                 if (err) {
                     done(err)
                 }
-                token = res.token
                 sampleUser.save()
                 done()
             })
@@ -50,7 +50,7 @@ describe('Authentication API endpoints', function () {
     // Delete sample user.
     afterEach(function (done) {
         User.deleteMany({
-            username: ['myuser', 'anotheruser', 'mynewusername'],
+            username: ['myuser', 'anotheruser', 'mynewusername']
         }).then(function () {
             done()
         })
@@ -64,11 +64,11 @@ describe('Authentication API endpoints', function () {
                 if (err) {
                     done(err)
                 }
-                expect(res.body).to.be.an('object')
-                expect(res.body.token).to.be.a('string')
+                res.body.should.be.an('object')
+                res.body.token.should.be.a('string')
                 // check that user is actually inserted into database
                 User.findOne({ username: 'anotheruser' }).then(function (user) {
-                    expect(user).to.be.an('object')
+                    user.should.be.an('object')
                     done()
                 })
             })
@@ -82,8 +82,8 @@ describe('Authentication API endpoints', function () {
                 if (err) {
                     done(err)
                 }
-                expect(res).to.have.status(200)
-                expect(res.body.token).to.be.a('string')
+                res.should.have.status(200)
+                res.body.token.should.be.a('string')
                 done()
             })
     })
