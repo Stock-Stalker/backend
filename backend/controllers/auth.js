@@ -123,15 +123,14 @@ exports.signInUser = async (req, res) => {
 
 exports.refreshToken = async (req, res) => {
     try {
-        const token = await Tokens.findOne({ _userId: req.userId })
-        const refreshToken = token.token
+        const token = await Tokens.findOne({ token: req.body.refreshToken })
         // verify the refresh token
         try {
-            jwt.verify(refreshToken, process.env.SECRET_KEY)
+            jwt.verify(req.body.refreshToken, process.env.SECRET_KEY)
         } catch (err) {
             return res.status(401).send({ message: 'Invalid Token' })
         }
-        const user = await User.findById(req.userId)
+        const user = await User.findById(token._userId)
         const newToken = jwt.sign(
             {
                 username: user.username,
