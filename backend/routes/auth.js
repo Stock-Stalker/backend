@@ -55,4 +55,5 @@ router.post(
 )
 
 router.post('/refresh', isAuth, authController.refreshToken)
+
 module.exports = router
