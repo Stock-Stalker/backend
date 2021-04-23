@@ -4,7 +4,7 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "test": "mocha ./tests/*.js",
+        "test": "snyk test && mocha ./tests/*.js",
         "start": "node app.js",
         "dev": "nodemon app.js",
         "format": "prettier --write \"{utils,tests,routes,models,middleware,controllers}/*.js\" && prettier --write ./app.js",
@@ -22,7 +22,7 @@
         "express-validator": "^6.10.0",
         "flatted": "^3.1.1",
         "jsonwebtoken": "^8.5.1",
-        "mongoose": "^5.12.0",
+        "mongoose": "^5.12.3",
         "redis": "^3.0.2"
     },
     "devDependencies": {
@@ -36,6 +36,7 @@
         "eslint-plugin-promise": "^4.3.1",
         "mocha": "^8.3.2",
         "nodemon": "^2.0.7",
-        "prettier": "2.2.1"
+        "prettier": "2.2.1",
+        "snyk": "^1.530.0"
     }
 }
