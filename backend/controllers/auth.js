@@ -38,20 +38,9 @@ exports.signUpUser = async (req, res) => {
                 expiresIn: '1h'
             }
         )
-        const refreshToken = jwt.sign(
-            {
-                username: user.username,
-                userId: user._id.toString()
-            },
-            process.env.SECRET_KEY,
-            {
-                expiresIn: '1d'
-            }
-        )
-
-        const newUserRefreshToken = new Tokens({ _userId: user._id, token: refreshToken })
-        await newUserRefreshToken.save()
-
+        await Tokens.findOneAndDelete({ _userId: user._id })
+        const refreshToken = new Tokens({ _userId: user._id, token: token })
+        await refreshToken.save()
         return res.status(200).json({
             message: 'Sign up successful!',
             user: {
@@ -95,42 +84,26 @@ exports.signInUser = async (req, res) => {
                 expiresIn: '1h'
             }
         )
-        const refreshToken = jwt.sign(
-            {
-                username: user.username,
-                userId: user._id.toString()
-            },
-            process.env.SECRET_KEY,
-            {
-                expiresIn: '1d'
-            }
-        )
-        const userRefreshToken = await Tokens.findOne({ _userId: user._id })
-        if (userRefreshToken) {
-            userRefreshToken.token = refreshToken
-            await userRefreshToken.save()
-        } else {
-            const newUserRefreshToken = new Tokens({ _userId: user._id, token: refreshToken })
-            await newUserRefreshToken.save()
-        }
+        await Tokens.findOneAndDelete({ _userId: user._id })
+        const refreshToken = new Tokens({ _userId: user._id, token: token })
+        await refreshToken.save()
         return res
             .status(200)
             .json({ message: 'Sign in successful', token: token, user: user })
     } catch (err) {
-        res.status(500).json({ err })
+        return res.status(500).json({ err })
     }
 }
 
 exports.refreshToken = async (req, res) => {
     try {
         const token = await Tokens.findOne({ token: req.body.refreshToken })
-        // verify the refresh token
         try {
-            jwt.verify(req.body.refreshToken, process.env.SECRET_KEY)
+            jwt.verify(token.token, process.env.SECRET_KEY)
         } catch (err) {
             return res.status(401).send({ message: 'Invalid Token' })
         }
-        const user = await User.findById(token._userId)
+        const user = await User.findById(req.userId)
         const newToken = jwt.sign(
             {
                 username: user.username,
@@ -141,10 +114,12 @@ exports.refreshToken = async (req, res) => {
                 expiresIn: '1h'
             }
         )
-        res
+        token.token = newToken
+        await token.save()
+        return res
             .status(200)
             .json({ message: 'New Token Generated', token: newToken, user: user })
     } catch (err) {
-        res.status(500).json({ err })
+        return res.status(500).json({ err })
     }
 }
