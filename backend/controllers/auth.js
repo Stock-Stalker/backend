@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const process = require('process')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const Tokens = require('../models/tokens')
 
 const { validationResult } = require('express-validator')
 
@@ -37,6 +38,9 @@ exports.signUpUser = async (req, res) => {
                 expiresIn: '1h'
             }
         )
+        await Tokens.findOneAndDelete({ _userId: user._id })
+        const refreshToken = new Tokens({ _userId: user._id, token: token })
+        await refreshToken.save()
         return res.status(200).json({
             message: 'Sign up successful!',
             user: {
@@ -48,7 +52,6 @@ exports.signUpUser = async (req, res) => {
         return res.status(500).json(err.message)
     }
 }
-
 exports.signInUser = async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -81,10 +84,42 @@ exports.signInUser = async (req, res) => {
                 expiresIn: '1h'
             }
         )
+        await Tokens.findOneAndDelete({ _userId: user._id })
+        const refreshToken = new Tokens({ _userId: user._id, token: token })
+        await refreshToken.save()
         return res
             .status(200)
             .json({ message: 'Sign in successful', token: token, user: user })
     } catch (err) {
-        res.status(500).json({ err })
+        return res.status(500).json({ err })
+    }
+}
+
+exports.refreshToken = async (req, res) => {
+    try {
+        const token = await Tokens.findOne({ token: req.body.refreshToken })
+        try {
+            jwt.verify(token.token, process.env.SECRET_KEY)
+        } catch (err) {
+            return res.status(401).send({ message: 'Invalid Token' })
+        }
+        const user = await User.findById(req.userId)
+        const newToken = jwt.sign(
+            {
+                username: user.username,
+                userId: user._id.toString()
+            },
+            process.env.SECRET_KEY,
+            {
+                expiresIn: '1h'
+            }
+        )
+        token.token = newToken
+        await token.save()
+        return res
+            .status(200)
+            .json({ message: 'New Token Generated', token: newToken, user: user })
+    } catch (err) {
+        return res.status(500).json({ err })
     }
 }
