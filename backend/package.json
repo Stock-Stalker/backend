@@ -4,7 +4,7 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "test": "snyk test && mocha ./tests/*.js",
+        "test": "mocha ./tests/*.js --exit",
         "start": "node app.js",
         "dev": "nodemon app.js",
         "format": "prettier --write \"{utils,tests,routes,models,middleware,controllers}/*.js\" && prettier --write ./app.js",
@@ -22,7 +22,7 @@
         "express-validator": "^6.10.0",
         "flatted": "^3.1.1",
         "jsonwebtoken": "^8.5.1",
-        "mongoose": "^5.12.3",
+        "mongoose": "^5.12.5",
         "redis": "^3.0.2"
     },
     "devDependencies": {

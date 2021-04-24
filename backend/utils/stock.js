@@ -1,5 +1,5 @@
 const axios = require('axios')
-const Symbols = require('../models/symbols')
+const Symbol = require('../models/symbol')
 const { client } = require('../utils/cache')
 
 const getCurrentTime = () => {
@@ -44,8 +44,7 @@ const getHistoricalData = async (symbol) => {
         const stockData = res.data.values
         return stockData
     } catch (err) {
-        console.log(err)
-        throw err
+        throw err.message
     }
 }
 
@@ -54,7 +53,7 @@ const getCompanyNameFromDB = async (symbol) => {
     Input: symbol
     Output: companyName */
     try {
-        const company = await Symbols.findOne({ symbol: symbol })
+        const company = await Symbol.findOne({ symbol: symbol })
         if (!company) {
             throw new Error(`Cannot find ${symbol}`)
         }
@@ -62,8 +61,7 @@ const getCompanyNameFromDB = async (symbol) => {
         client.setex(symbol, 3600, companyName)
         return companyName
     } catch (err) {
-        console.log(err)
-        throw err
+        throw err.message
     }
 }
 
@@ -71,11 +69,10 @@ const getAllCompanyNames = async () => {
     /* Returns all the stocks' symbol and company name
      Output: {symbol,companyName} */
     try {
-        const companies = await Symbols.find({}, { _id: 0 })
+        const companies = await Symbol.find({}, { _id: 0 })
         return companies
     } catch (err) {
-        console.log(err)
-        throw err
+        throw err.message
     }
 }
 
@@ -91,8 +88,7 @@ const getPredictionFromAPI = async (symbol) => {
         client.setex(`${symbol}_predict`, 3600, res.data[`${symbol}`])
         return res.data[`${symbol}`]
     } catch (err) {
-        console.log(err)
-        throw err
+        throw err.message
     }
 }
 
@@ -107,8 +103,7 @@ const getPredictionsFromAPI = async (symbols) => {
         }
         return predictions
     } catch (err) {
-        console.log(err)
-        throw err
+        throw err.message
     }
 }
 
