@@ -49,8 +49,7 @@ describe('Watchlist API endpoints', function () {
                 done()
             })
             .catch(function (err) {
-                console.log(err)
-                done()
+                done(err)
             })
     })
 

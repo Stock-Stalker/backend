@@ -29,7 +29,6 @@ describe('Stocks endpoints', function () {
                 res.should.have.status(200)
                 res.body.should.be.an('Object')
                 res.body.stockData.historicalData.should.be.an('array')
-                // console.log(`res.body.stockData.symbol: ${res.body.stockData.symbol}`)
                 res.body.stockData.symbol.should.equal('AAPL')
                 res.body.stockData.companyName.should.equal('Apple')
                 return done()
