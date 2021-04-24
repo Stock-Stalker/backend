@@ -1,6 +1,4 @@
-const mongoose = require('mongoose')
-
-const Schema = mongoose.Schema
+const { Schema, model } = require('mongoose')
 
 const userSchema = new Schema(
     {
@@ -12,7 +10,8 @@ const userSchema = new Schema(
             type: String,
             required: true
         },
-        watchlist: [{ type: Schema.Types.ObjectId, ref: 'Symbols' }]
+        watchlist: [{ type: Schema.Types.ObjectId, ref: 'Symbol' }],
+        token: { type: String }
     },
     { timestamps: true }
 )
@@ -32,4 +31,4 @@ userSchema.pre('findByIdAndUpdate', function (next) {
     next()
 })
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = model('User', userSchema)
