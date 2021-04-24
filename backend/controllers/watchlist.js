@@ -1,11 +1,10 @@
 const { updateWatchlistDetails } = require('../utils/watchlist')
 const User = require('../models/user')
-const Symbol = require('../models/symbols')
+const Symbol = require('../models/symbol')
 
 exports.getWatchlist = async (req, res) => {
     try {
         let user = await User.findOne({ _id: req.userId })
-        // console.log(`user.watchlist: ${user.watchlist}`)
         user = await updateWatchlistDetails(user)
         return res.status(200).send(user.watchlist)
     } catch (err) {
