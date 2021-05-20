@@ -25,7 +25,7 @@ services:
       - stockstalker-network
     depends_on:
       - redis
-    command: npm test
+    command: npm run coverage
 
 volumes:
   redis-data:
