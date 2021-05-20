@@ -30,7 +30,7 @@ jobs:
 
       - name: Test with Mocha & Chai
         run: |
-          npm run test
+          npm run coverage
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           PREDICTOR_API: ${{ secrets.PREDICTOR_API }}
