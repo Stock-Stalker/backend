@@ -415,6 +415,7 @@ temp/
 .sourcemaps/
 .sass-cache/
 .tmp/
+hooks/
 
 # Ionic 3 plugins files
 platforms/
@@ -444,5 +445,3 @@ bower_components
 psd
 thumb
 sketch
-
-secrets.mk

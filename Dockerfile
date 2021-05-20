@@ -4,10 +4,10 @@ LABEL decription="Production image for StockStalker backend."
 
 WORKDIR /usr/src/app
 
-COPY backend/package*.json ./
+COPY package*.json ./
 
-RUN npm ci
+RUN npm ci --production
 
-COPY backend .
+COPY . .
 
 CMD ["npm", "start"]

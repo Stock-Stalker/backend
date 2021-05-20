@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  backend:
+    restart: always
+    container_name: backend
+    image: index.docker.io/starlightromero/stockstalker-backend
+    env_file:
+      - .env
+    networks:
+      - stockstalker-network
+
+networks:
+  stockstalker-network:
+    driver: bridge
