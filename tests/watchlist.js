@@ -21,7 +21,7 @@ describe('Watchlist API endpoints', function () {
             username: 'myuser',
             password: 'mypassword',
             watchlist: [],
-            _id: SAMPLE_OBJECT_ID
+            _id: SAMPLE_OBJECT_ID,
         })
         chai.request(app)
             .post('/api/user/signup')
@@ -35,7 +35,9 @@ describe('Watchlist API endpoints', function () {
                     .set('Authorization', `Bearer ${token}`)
                     .send({ symbol: 'AAPL' })
                     .end(function (err, res) {
-                        if (err) { done(err) }
+                        if (err) {
+                            done(err)
+                        }
                         done()
                     })
             })
@@ -43,8 +45,7 @@ describe('Watchlist API endpoints', function () {
 
     // Delete sample user.
     afterEach(function (done) {
-        User
-            .deleteMany({ username: 'myuser' })
+        User.deleteMany({ username: 'myuser' })
             .then(function () {
                 done()
             })
@@ -61,11 +62,11 @@ describe('Watchlist API endpoints', function () {
             .set('Authorization', `Bearer ${token}`)
             .send({ symbol: 'GOOG' })
             .end(function (err, res) {
-                if (err) { done(err) }
+                if (err) {
+                    done(err)
+                }
                 res.should.have.status(200)
-                res.body.length.should.equal(
-                    initialCount + 1
-                )
+                res.body.length.should.equal(initialCount + 1)
                 done()
             })
     })
@@ -78,11 +79,11 @@ describe('Watchlist API endpoints', function () {
             .set('Authorization', `Bearer ${token}`)
             .send({ symbol: 'AAPL' })
             .end(function (err, res) {
-                if (err) { done(err) }
+                if (err) {
+                    done(err)
+                }
                 res.should.have.status(200)
-                res.body.length.should.equal(
-                    initialCount - 1
-                )
+                res.body.length.should.equal(initialCount - 1)
                 done()
             })
     })

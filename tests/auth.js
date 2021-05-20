@@ -16,7 +16,7 @@ describe('Authentication API endpoints', function () {
         const sampleUser = new User({
             username: 'myuser',
             password: 'mypassword',
-            _id: SAMPLE_OBJECT_ID
+            _id: SAMPLE_OBJECT_ID,
         })
         chai.request(app)
             .post('/api/user/signup')
@@ -34,7 +34,7 @@ describe('Authentication API endpoints', function () {
     // Delete sample user.
     afterEach(function (done) {
         User.deleteMany({
-            username: ['myuser', 'anotheruser', 'mynewusername']
+            username: ['myuser', 'anotheruser', 'mynewusername'],
         }).then(function () {
             done()
         })

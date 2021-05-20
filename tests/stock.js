@@ -9,7 +9,8 @@ chai.use(chaiHttp)
 describe('Stocks endpoints', function () {
     it('should get all the stock symbols and company names', (done) => {
         chai.request(app)
-            .get('/api/stock').end((err, res) => {
+            .get('/api/stock')
+            .end((err, res) => {
                 if (err) {
                     return done(err)
                 }
@@ -22,7 +23,8 @@ describe('Stocks endpoints', function () {
     it('should get the stock data', function (done) {
         this.timeout(12000)
         chai.request(app)
-            .get('/api/stock/AAPL').end((err, res) => {
+            .get('/api/stock/AAPL')
+            .end((err, res) => {
                 if (err) {
                     return done(err)
                 }
@@ -37,7 +39,8 @@ describe('Stocks endpoints', function () {
 
     it('should return status 404 when enter invalid symbol', function (done) {
         chai.request(app)
-            .get('/api/stock/AAPLLL').end((err, res) => {
+            .get('/api/stock/AAPLLL')
+            .end((err, res) => {
                 if (err) {
                     return done(err)
                 }
@@ -48,7 +51,8 @@ describe('Stocks endpoints', function () {
     it('should return the prediction of a stock ', function (done) {
         this.timeout(10000)
         chai.request(app)
-            .get('/api/stock/prediction/AAPL').end((err, res) => {
+            .get('/api/stock/prediction/AAPL')
+            .end((err, res) => {
                 if (err) {
                     return done(err)
                 }
