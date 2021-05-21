@@ -1,19 +1,19 @@
 -include secrets.mk
 
 build :
-				docker-compose -f docker-compose.dev.yml build --force-rm --no-cache
+				docker-compose build --force-rm --no-cache
 
 start:
-				docker-compose -f docker-compose.dev.yml up
+				docker-compose up
 
 stop :
 				docker-compose down --remove-orphans
 
 debug :
-				docker-compose -f docker-compose.dev.yml --verbose up
+				docker-compose --verbose up
 
 reload:
-				docker-compose down && docker-compose -f docker-compose.dev.yml up
+				docker-compose down && docker-compose up
 
 test :
 				docker-compose -f docker-compose.test.yml up --abort-on-container-exit
@@ -26,12 +26,6 @@ reload-test :
 
 hard-reload-test :
 				docker-compose down && docker rmi backend_backend && docker-compose -f docker-compose.test.yml up --abort-on-container-exit
-
-start-prod :
-				docker-compose up -d
-
-debug-prod:
-				docker-compose --verbose up
 
 lint:
 				npm run lint
