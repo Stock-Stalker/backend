@@ -19,6 +19,7 @@ Issues are a huge part of making StockStalker the best it can be. However, pleas
   - What actually happened? (i.e: "The stock did not show up until I refreshed the page.")
 
 - What browser are you using?
+
 - If you know how to check the developer tools, can you share a screenshot of anything that appeared in the console at the time of encountering the bug?
 
 The more description we get, the faster we can find and fix bugs. If you're experienced at this and know what is likely to be causing the bug, feel free to also include a detailed explanation of your hunch - the more links to files and code snippets you can include, the better!
