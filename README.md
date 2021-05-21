@@ -32,10 +32,6 @@
 
 `hard-reload-test`: Remove container, rebuild container, and start test server
 
-`start-prod`: Start the production server
-
-`debug-prod`: Start the production server in debug mode
-
 ## How to Run
 
 To run the app you will need:
