@@ -83,13 +83,11 @@ exports.signInUser = async (req, res) => {
             }
         )
         await user.save()
-        return res
-            .status(200)
-            .json({
-                message: 'Sign in successful',
-                token: user.token,
-                user: user
-            })
+        return res.status(200).json({
+            message: 'Sign in successful',
+            token: user.token,
+            user: user
+        })
     } catch (err) {
         return res.status(500).json({ err })
     }
@@ -115,13 +113,11 @@ exports.refreshToken = async (req, res) => {
         )
         user.token = token
         await user.save()
-        return res
-            .status(200)
-            .json({
-                message: 'New Token Generated',
-                token: user.token,
-                user: user
-            })
+        return res.status(200).json({
+            message: 'New Token Generated',
+            token: user.token,
+            user: user
+        })
     } catch (err) {
         return res.status(500).json({ err })
     }
