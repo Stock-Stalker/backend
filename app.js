@@ -1,4 +1,5 @@
 const cors = require('cors')
+const helmet = require('helmet')
 const express = require('express')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
@@ -22,6 +23,7 @@ const corsOptions = {
     credentials: true
 }
 
+app.use(helmet())
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())

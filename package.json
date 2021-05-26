@@ -1,8 +1,9 @@
 {
     "name": "backend",
     "version": "1.0.0",
-    "description": "",
+    "description": "StockStalker - Backend API",
     "main": "app.js",
+    "repository": "github:Stock-Stalker/backend",
     "scripts": {
         "test": "mocha ./tests/*.js --exit",
         "coverage": "nyc npm run test && nyc report --reporter=text --check-coverage --lines 90",
@@ -22,6 +23,7 @@
         "express": "^4.17.1",
         "express-validator": "^6.10.0",
         "flatted": "^3.1.1",
+        "helmet": "^4.6.0",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.12.5",
         "redis": "^3.0.2"
