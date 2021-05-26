@@ -14,7 +14,7 @@ router.patch(
     '/',
     [
         body('symbol', 'Please ensure you pass a valid string as symbol.')
-            .isLength({ min: 1, max: 6 })
+            .isLength({ min: 1, max: 5 })
             .escape()
             .not()
             .isEmpty()
