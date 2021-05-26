@@ -47,7 +47,7 @@ exports.getOneStock = async (req, res) => {
 
 exports.getPrediction = async (req, res) => {
     try {
-        const symbol = req.params.symbol.toUpperCase()
+        const symbol = req.params.symbol.toString().toUpperCase()
         const prediction =
             (await getPredictionFromCache(symbol)) ||
             (await getPredictionFromAPI(symbol))

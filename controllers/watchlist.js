@@ -15,7 +15,7 @@ exports.getWatchlist = async (req, res) => {
 exports.updateWatchlist = async (req, res) => {
     try {
         const stock = await Symbol.findOne({
-            symbol: req.body.symbol.toUpperCase()
+            symbol: req.body.symbol.toString().toUpperCase()
         })
         let user = await User.findOne({ _id: req.userId, watchlist: stock })
         if (user) {
