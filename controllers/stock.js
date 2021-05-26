@@ -23,7 +23,7 @@ exports.getAllStocks = async (req, res) => {
 
 exports.getOneStock = async (req, res) => {
     let symbol = req.body.symbol
-    typeof symbol === 'string' ? symbol.toUpperCase() : (symbol = '')
+    typeof symbol === 'string' ? (symbol = symbol.toUpperCase()) : (symbol = '')
     try {
         const companyName =
             (await getCompanyNameFromCache(symbol)) ||
@@ -48,7 +48,7 @@ exports.getOneStock = async (req, res) => {
 
 exports.getPrediction = async (req, res) => {
     let symbol = req.body.symbol
-    typeof symbol === 'string' ? symbol.toUpperCase() : (symbol = '')
+    typeof symbol === 'string' ? (symbol = symbol.toUpperCase()) : (symbol = '')
     try {
         const prediction =
             (await getPredictionFromCache(symbol)) ||

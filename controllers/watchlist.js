@@ -14,7 +14,7 @@ exports.getWatchlist = async (req, res) => {
 
 exports.updateWatchlist = async (req, res) => {
     let symbol = req.body.symbol
-    typeof symbol === 'string' ? symbol.toUpperCase() : (symbol = '')
+    typeof symbol === 'string' ? (symbol = symbol.toUpperCase()) : (symbol = '')
     try {
         const stock = await Symbol.findOne({
             symbol: symbol
