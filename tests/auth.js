@@ -10,21 +10,13 @@ const User = require('../models/user')
 
 const SAMPLE_OBJECT_ID = 'aaaaaaaaaaaa' // 12 byte string
 
-const user1 = {}
-user1.username = process.env.USER1_USERNAME || 'myuser'
-user1.password = process.env.USER1_PASSWORD || 'mypassword'
-
-const user2 = {}
-user2.username = process.env.USER1_USERNAME || 'anotheruser'
-user2.password = process.env.USER1_PASSWORD || 'anotherpassword'
-
 describe('Authentication API endpoints', function () {
     // Create a sample user for use in tests.
     beforeEach(function (done) {
         const sampleUser = new User({
-            username: user1.username,
-            password: user1.password,
-            _id: SAMPLE_OBJECT_ID,
+            username: process.env.USER1_USERNAME,
+            password: process.env.USER1_PASSWORD,
+            _id: SAMPLE_OBJECT_ID
         })
         chai.request(app)
             .post('/api/user/signup')
@@ -42,7 +34,7 @@ describe('Authentication API endpoints', function () {
     // Delete sample user.
     afterEach(function (done) {
         User.deleteMany({
-            username: [user1.username, user2.username],
+            username: [process.env.USER1_USERNAME, process.env.USER2_USERNAME]
         }).then(function () {
             done()
         })
@@ -51,7 +43,7 @@ describe('Authentication API endpoints', function () {
     it('should sign up a new user', function (done) {
         chai.request(app)
             .post('/api/user/signup')
-            .send({ username: user2.username, password: user2.password })
+            .send({ username: process.env.USER2_USERNAME, password: process.env.USER2_PASSWORD })
             .end(function (err, res) {
                 if (err) {
                     done(err)
@@ -59,7 +51,7 @@ describe('Authentication API endpoints', function () {
                 res.body.should.be.an('object')
                 res.body.token.should.be.a('string')
                 // check that user is actually inserted into database
-                User.findOne({ username: user2.username }).then(function (
+                User.findOne({ username: process.env.USER2_USERNAME }).then(function (
                     user
                 ) {
                     user.should.be.an('object')
@@ -71,7 +63,7 @@ describe('Authentication API endpoints', function () {
     it('should sign in a user', function (done) {
         chai.request(app)
             .post('/api/user/signin')
-            .send({ username: user1.username, password: user1.password })
+            .send({ username: process.env.USER1_USERNAME, password: process.env.USER1_PASSWORD })
             .end(function (err, res) {
                 if (err) {
                     done(err)
