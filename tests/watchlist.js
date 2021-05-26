@@ -13,13 +13,18 @@ const User = require('../models/user')
 let token
 
 const SAMPLE_OBJECT_ID = 'aaaaaaaaaaaa' // 12 byte string
+
+const user1 = {}
+user1.username = process.env.USER1_USERNAME || 'myuser'
+user1.password = process.env.USER1_PASSWORD || 'mypassword'
+
 describe('Watchlist API endpoints', function () {
     this.timeout(3000)
     // Create a sample user for use in tests.
     beforeEach(function (done) {
         const sampleUser = new User({
-            username: 'myuser',
-            password: 'mypassword',
+            username: user1.username,
+            password: user1.password,
             watchlist: [],
             _id: SAMPLE_OBJECT_ID,
         })
@@ -45,7 +50,7 @@ describe('Watchlist API endpoints', function () {
 
     // Delete sample user.
     afterEach(function (done) {
-        User.deleteMany({ username: 'myuser' })
+        User.deleteMany({ username: user1.username })
             .then(function () {
                 done()
             })

@@ -1,4 +1,5 @@
 const cors = require('cors')
+const csrf = require('csurf')
 const helmet = require('helmet')
 const express = require('express')
 const mongoose = require('mongoose')
@@ -7,6 +8,7 @@ const cookieParser = require('cookie-parser')
 const stockRoutes = require('./routes/stock')
 const authRoutes = require('./routes/auth')
 const watchlistRoutes = require('./routes/watchlist')
+
 const app = express()
 
 const corsOptions = {
@@ -27,6 +29,7 @@ app.use(helmet())
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
+app.use(csrf({ cookie: true }))
 
 app.use('/api/user/watchlist', watchlistRoutes)
 app.use('/api/stock', stockRoutes)
