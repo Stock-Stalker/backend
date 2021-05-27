@@ -1,22 +1,25 @@
 -include secrets.mk
 
 build :
-				docker-compose build --force-rm --no-cache
+				docker compose -f docker-compose.dev.yml build --force-rm --no-cache
 
 start:
-				docker-compose up
+				docker compose -f docker-compose.dev.yml up
 
 stop :
-				docker-compose down --remove-orphans
+				docker compose down --remove-orphans
 
 debug :
-				docker-compose --verbose up
+				docker compose -f docker-compose.dev.yml --verbose up
 
 reload:
-				docker-compose down && docker-compose up
+				docker compose down && docker compose -f docker-compose.dev.yml up
+
+hard-reload:
+				docker compose down && docker rmi backend_backend && docker compose -f docker-compose.dev.yml up
 
 test :
-				docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+				docker compose -f docker-compose.test.yml up --abort-on-container-exit
 
 test-security:
 				snyk config set api=$(snyk_auth_token) && snyk test
@@ -25,10 +28,10 @@ test-image-security:
 				snyk config set api=$(snyk_auth_token) && snyk container test node:lts-alpine --file=Dockerfile --fail-on=upgradable
 
 reload-test :
-				docker-compose down && docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+				docker compose down && docker compose -f docker-compose.test.yml up --abort-on-container-exit
 
 hard-reload-test :
-				docker-compose down && docker rmi backend_backend && docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+				docker compose down && docker rmi backend_backend && docker compose -f docker-compose.test.yml up --abort-on-container-exit
 
 lint:
 				npm run lint
