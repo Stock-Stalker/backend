@@ -26,6 +26,7 @@ const updateWatchlistDetails = async (user) => {
             stock.prediction = predictions[`${stock.symbol}`]
         }
     }
+
     await user.save()
     return user
 }
