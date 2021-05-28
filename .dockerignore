@@ -5,7 +5,7 @@ node_modules/
 .eslint*
 .gitignore
 .prettier*
-.synk
+.snyk
 *.md
 docker-compose*
 Dockerfile*
