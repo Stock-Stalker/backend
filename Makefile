@@ -1,37 +1,42 @@
 -include secrets.mk
 
 build :
-				export DOCKER_CONTENT_TRUST=1 && docker compose -f docker-compose.dev.yml build --force-rm --no-cache
+				TAG=$$(date +%Y%m%d%H%M%S) docker compose -f docker-compose.dev.yml build --force-rm
 
 start:
-				export DOCKER_CONTENT_TRUST=1 && docker compose -f docker-compose.dev.yml up
+				make build
+				docker compose -f docker-compose.dev.yml up
 
 stop :
 				docker compose -f docker-compose.dev.yml down --remove-orphans
 
 debug :
+				make build
 				docker compose -f docker-compose.dev.yml --verbose up
 
 reload:
-				docker compose -f docker-compose.dev.yml down && docker compose -f docker-compose.dev.yml up
-
-hard-reload:
-				docker compose -f docker-compose.dev.yml down && docker rmi backend_backend && docker compose -f docker-compose.dev.yml up
+				make stop
+				make start
 
 test :
 				docker compose -f docker-compose.test.yml up --abort-on-container-exit
 
 test-security:
-				snyk config set api=$(snyk_auth_token) && snyk test
+				snyk config set api=$(snyk_auth_token)
+				snyk test
 
 test-image-security:
-				snyk config set api=$(snyk_auth_token) && snyk container test node:lts-buster-slim --file=Dockerfile --fail-on=upgradable
+				snyk config set api=$(snyk_auth_token)
+				snyk container test node:lts-buster-slim --file=Dockerfile --fail-on=upgradable
 
 reload-test :
-				docker compose -f docker-compose.test.yml down && docker compose -f docker-compose.test.yml up --abort-on-container-exit
+				docker compose -f docker-compose.test.yml down
+				make test
 
 hard-reload-test :
-				docker compose -f docker-compose.test.yml down && docker rmi backend_backend && docker compose -f docker-compose.test.yml up --abort-on-container-exit
+				docker compose -f docker-compose.test.yml down
+				mke rmi
+				make test
 
 lint:
 				npm run lint
@@ -40,7 +45,8 @@ rm :
 				docker container prune -f
 				
 rm-all:
-				docker stop $$(docker ps -aq) && docker rm $$(docker ps -aq)
+				docker stop $$(docker ps -aq)
+				docker rm $$(docker ps -aq)
 
 rmi :
 				docker rmi backend_backend
