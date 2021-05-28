@@ -43,7 +43,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_AUTH_TOKEN }}
         with:
-          image: node:lts-alpine
+          image: node:lts-buster-slim
           args: --fail-on=upgradable
 
       - name: Security Test with Snyk
