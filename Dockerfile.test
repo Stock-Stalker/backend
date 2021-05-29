@@ -1,0 +1,16 @@
+FROM node:14-buster-slim
+
+LABEL decription="Test image for StockStalker backend."
+
+HEALTHCHECK --interval=1m --timeout=5s --retries=2 \
+  CMD curl -f http://localhost/api/stock || exit 1
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+CMD ["npm", "run", "dev"]
