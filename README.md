@@ -22,8 +22,6 @@
 
 `reload`: Stop development server and restart the server at port `8080`
 
-`hard-reload`: Stop container, remove container, rebuild container, and start development server
-
 `debug`: Start development server in debug mode
 
 `test`: Start test server
@@ -50,6 +48,11 @@ The `.env` file is not pushed to GitHub. You'll need to create the file in the r
 - ROBINHOOD_API
 - STOCK_DATA_API
 - SECRET_KEY
+- SALT
+- USER1_USERNAME
+- USER1_PASSWORD
+- USER2_USERNAME
+- USER2_PASSWORD
 
 Additionally you'll need to create `secrets.mk`, a Makefile at the root of the project with the following vars:
 
