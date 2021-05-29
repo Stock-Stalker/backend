@@ -13,7 +13,7 @@ services:
     image: backend:$TAG
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.test
     container_name: backend
     volumes:
       - ./controllers:/usr/src/app/controllers
