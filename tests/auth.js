@@ -43,7 +43,10 @@ describe('Authentication API endpoints', function () {
     it('should sign up a new user', function (done) {
         chai.request(app)
             .post('/api/user/signup')
-            .send({ username: process.env.USER2_USERNAME, password: process.env.USER2_PASSWORD })
+            .send({
+                username: process.env.USER2_USERNAME,
+                password: process.env.USER2_PASSWORD
+            })
             .end(function (err, res) {
                 if (err) {
                     done(err)
@@ -51,19 +54,22 @@ describe('Authentication API endpoints', function () {
                 res.body.should.be.an('object')
                 res.body.token.should.be.a('string')
                 // check that user is actually inserted into database
-                User.findOne({ username: process.env.USER2_USERNAME }).then(function (
-                    user
-                ) {
-                    user.should.be.an('object')
-                    done()
-                })
+                User.findOne({ username: process.env.USER2_USERNAME }).then(
+                    function (user) {
+                        user.should.be.an('object')
+                        done()
+                    }
+                )
             })
     })
 
     it('should sign in a user', function (done) {
         chai.request(app)
             .post('/api/user/signin')
-            .send({ username: process.env.USER1_USERNAME, password: process.env.USER1_PASSWORD })
+            .send({
+                username: process.env.USER1_USERNAME,
+                password: process.env.USER1_PASSWORD
+            })
             .end(function (err, res) {
                 if (err) {
                     done(err)
@@ -75,22 +81,25 @@ describe('Authentication API endpoints', function () {
     })
     it('should generate a refresh token', function (done) {
         chai.request(app)
-        .post('/api/user/signup')
-        .send({ username: process.env.USER2_USERNAME, password: process.env.USER2_PASSWORD })
-        .then(function (res){
-            token = res.body.token
-            chai.request(app)
-            .post('/api/user/refresh')
-            .set('Authorization', `Bearer ${token}`)
-            .end(function (err, res) {
-                if (err) {
-                    done(err)
-                }
-                res.should.have.status(200)
-                res.body.message.should.equal("New Token Generated")
-                res.body.token.should.be.a('string')
-                done()
+            .post('/api/user/signup')
+            .send({
+                username: process.env.USER2_USERNAME,
+                password: process.env.USER2_PASSWORD
             })
-        })
+            .then(function (res) {
+                const token = res.body.token
+                chai.request(app)
+                    .post('/api/user/refresh')
+                    .set('Authorization', `Bearer ${token}`)
+                    .end(function (err, res) {
+                        if (err) {
+                            done(err)
+                        }
+                        res.should.have.status(200)
+                        res.body.message.should.equal('New Token Generated')
+                        res.body.token.should.be.a('string')
+                        done()
+                    })
+            })
     })
 })
