@@ -10,14 +10,14 @@ stop :
 				docker compose -f docker-compose.dev.yml down --remove-orphans
 
 debug :
-				TAG=$$(date +%Y%m%d%H%M%S) docker compose -f docker-compose.dev.yml --verbose up
+				TAG=$$(date +%m%d%H%M%S) docker compose -f docker-compose.dev.yml --verbose up
 
 reload:
 				make stop
 				make start
 
 test :
-				TAG=$$(date +%Y%m%d%H%M%S) docker compose -f docker-compose.test.yml up --abort-on-container-exit
+				TAG=$$(date +%m%d%H%M%S) docker compose -f docker-compose.test.yml up --abort-on-container-exit
 
 test-security:
 				snyk config set api=$(snyk_auth_token)
