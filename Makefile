@@ -4,22 +4,20 @@ build :
 				TAG=$$(date +%Y%m%d%H%M%S) docker compose -f docker-compose.dev.yml build --force-rm
 
 start:
-				make build
-				docker compose -f docker-compose.dev.yml up
+				TAG=$$(date +%Y%m%d%H%M%S) docker compose -f docker-compose.dev.yml up
 
 stop :
 				docker compose -f docker-compose.dev.yml down --remove-orphans
 
 debug :
-				make build
-				docker compose -f docker-compose.dev.yml --verbose up
+				TAG=$$(date +%Y%m%d%H%M%S) docker compose -f docker-compose.dev.yml --verbose up
 
 reload:
 				make stop
 				make start
 
 test :
-				docker compose -f docker-compose.test.yml up --abort-on-container-exit
+				TAG=$$(date +%Y%m%d%H%M%S) docker compose -f docker-compose.test.yml up --abort-on-container-exit
 
 test-security:
 				snyk config set api=$(snyk_auth_token)
@@ -35,7 +33,7 @@ reload-test :
 
 hard-reload-test :
 				docker compose -f docker-compose.test.yml down
-				mke rmi
+				make rmi
 				make test
 
 lint:
