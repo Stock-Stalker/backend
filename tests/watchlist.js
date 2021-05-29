@@ -54,24 +54,6 @@ describe('Watchlist API endpoints', function () {
                 done(err)
             })
     })
-
-    it('should add a stock if the it is not in the watchlist', function (done) {
-        this.timeout(10000)
-        const initialCount = 1
-        chai.request(app)
-            .patch('/api/user/watchlist')
-            .set('Authorization', `Bearer ${token}`)
-            .send({ symbol: 'GOOG' })
-            .end(function (err, res) {
-                if (err) {
-                    done(err)
-                }
-                res.should.have.status(200)
-                res.body.length.should.equal(initialCount + 1)
-                done()
-            })
-    })
-
     it('should remove a stock if it already exists in the watchlist', function (done) {
         this.timeout(5000)
         const initialCount = 1
@@ -88,17 +70,35 @@ describe('Watchlist API endpoints', function () {
                 done()
             })
     })
+    it('should add a stock if the it is not in the watchlist', function (done) {
+        this.timeout(10000)
+        const initialCount = 1
+        chai.request(app)
+            .patch('/api/user/watchlist/')
+            .set('Authorization', `Bearer ${token}`)
+            .send({ symbol: 'TSLA' })
+            .end(function (err, res) {
+                if (err) {
+                    done(err)
+                }
+                res.should.have.status(200)
+                res.body.length.should.equal(initialCount + 1)
+                done()
+            })
+    })
+    it('should get all stock data in users watchlist', function (done) {
+        this.timeout(10000)
+        chai.request(app)
+            .get('/api/user/watchlist/')
+            .set('Authorization', `Bearer ${token}`)
+            .end(function (err, res) {
+                if (err) {
+                    done(err)
+                }
+                res.status.should.be.equal(200)
+                res.body.should.be.an('Array')
+                done()
+            })
+    })
 })
-// it('should get all stock data in users watchlist', function (done) {
-//     chai.request(app)
-//         .get('/api/user/watchlist')
-//         .set('Authorization', `Bearer ${token}`)
-//         .end(function (err, res) {
-//             if (err) {
-//                 done(err)
-//             }
-//             res.status.should.be.equal(200)
-//             res.body.should.be.an('Array')
-//             done()
-//         })
-// })
+

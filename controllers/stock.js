@@ -28,7 +28,7 @@ exports.getOneStock = async (req, res) => {
         const companyName =
             (await getCompanyNameFromCache(symbol)) ||
             (await getCompanyNameFromDB(symbol))
-        const historicalData = await getHistoricalData(symbol)
+        const historicalData = await getHistoricalData(symbol,'year')
         const currentPrice = await getCurrentPrice(symbol)
         const prediction =
             (await getPredictionFromCache(symbol)) ||

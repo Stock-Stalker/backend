@@ -73,4 +73,24 @@ describe('Authentication API endpoints', function () {
                 done()
             })
     })
+    it('should generate a refresh token', function (done) {
+        chai.request(app)
+        .post('/api/user/signup')
+        .send({ username: process.env.USER2_USERNAME, password: process.env.USER2_PASSWORD })
+        .then(function (res){
+            token = res.body.token
+            chai.request(app)
+            .post('/api/user/refresh')
+            .set('Authorization', `Bearer ${token}`)
+            .end(function (err, res) {
+                if (err) {
+                    done(err)
+                }
+                res.should.have.status(200)
+                res.body.message.should.equal("New Token Generated")
+                res.body.token.should.be.a('string')
+                done()
+            })
+        })
+    })
 })
