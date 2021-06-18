@@ -10,7 +10,7 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
 
   backend:
-    restart: always
+    image: backend:$TAG
     build:
       context: .
       dockerfile: Dockerfile.dev
