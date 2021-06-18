@@ -2,6 +2,7 @@
 .nyc_output/
 node_modules/
 .dockerignore
+.env
 .eslint*
 .gitignore
 .prettier*
@@ -9,5 +10,6 @@ node_modules/
 *.md
 docker-compose*
 Dockerfile*
+logo.png
 Makefile
 *.mk
