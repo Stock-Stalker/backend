@@ -1,4 +1,35 @@
-# StockStalker - Backend API
+<!-- logo -->
+<p align="center">
+  <img width="300" src="logo.png">
+</p>
+
+<!-- short description -->
+<h1 align="center">StockStalker - Backend API </h1>
+
+<p align="center">
+    <!-- license -->
+    <img src="https://img.shields.io/github/license/Stock-Stalker/backend" />
+    <!-- code size  -->
+    <img src="https://img.shields.io/github/languages/code-size/Stock-Stalker/backend" />
+    <!-- issues -->
+    <img src="https://img.shields.io/github/issues/Stock-Stalker/backend" />
+    <!-- pull requests -->
+    <img src="https://img.shields.io/github/issues-pr/Stock-Stalker/backend" />
+    <!-- number of commits per year -->
+    <img src="https://img.shields.io/github/commit-activity/y/Stock-Stalker/backend" />
+    <!-- last commit -->
+    <img src="https://img.shields.io/github/last-commit/Stock-Stalker/backend" />
+    <!-- docker image size -->
+    <img src="https://img.shields.io/docker/image-size/starlightromero/stockstalker-backend" />
+    <!-- docker pulls -->
+    <img src="https://img.shields.io/docker/pulls/starlightromero/stockstalker-backend" />
+    <!-- website status -->
+    <img src="https://img.shields.io/website?url=https%3A%2F%2Fstockstalker.tk" />
+</p>
+
+## API Documentation
+
+Documentation can be found [here](https://github.com/Stock-Stalker/backend/wiki/StockStalker---API)
 
 ## Makefile Commands
 
@@ -51,7 +82,7 @@ The `.env` file is not pushed to GitHub. You'll need to create the file in the r
 - STOCK_DATA_API
 - SECRET_KEY
 
-Additionally you'll need to create `secrets.mk`, a Makefile at the root of the project with the following vars:
+Optionally, you'll need to create `secrets.mk`, a Makefile at the root of the project with the following vars:
 
 - snyk_auth_token
 
