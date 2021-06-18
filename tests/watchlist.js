@@ -22,7 +22,7 @@ describe('Watchlist API endpoints', function () {
             username: process.env.USER1_USERNAME,
             password: process.env.USER1_PASSWORD,
             watchlist: [],
-            _id: SAMPLE_OBJECT_ID
+            _id: SAMPLE_OBJECT_ID,
         })
         chai.request(app)
             .post('/api/user/signup')
@@ -101,4 +101,3 @@ describe('Watchlist API endpoints', function () {
             })
     })
 })
-

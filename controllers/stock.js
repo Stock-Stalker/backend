@@ -1,16 +1,12 @@
 const {
-    getCompanyNameFromDB,
+    getCompanyName,
     getHistoricalData,
     getAllCompanyNames,
     getPredictionFromAPI,
     getPredictionsFromAPI,
-    getCurrentPrice,
-    getCurrentPrices
+    getCurrentPrice
 } = require('../utils/stock')
-const {
-    getCompanyNameFromCache,
-    getPredictionFromCache
-} = require('../utils/cache')
+const { getPredictionFromCache } = require('../utils/cache')
 
 exports.getAllStocks = async (req, res) => {
     try {
@@ -25,10 +21,8 @@ exports.getOneStock = async (req, res) => {
     let symbol = req.params.symbol
     typeof symbol === 'string' ? (symbol = symbol.toUpperCase()) : (symbol = '')
     try {
-        const companyName =
-            (await getCompanyNameFromCache(symbol)) ||
-            (await getCompanyNameFromDB(symbol))
-        const historicalData = await getHistoricalData(symbol,'year')
+        const companyName = await getCompanyName(symbol)
+        const historicalData = await getHistoricalData(symbol, 'year')
         const currentPrice = await getCurrentPrice(symbol)
         const prediction =
             (await getPredictionFromCache(symbol)) ||
@@ -62,7 +56,7 @@ exports.getPrediction = async (req, res) => {
 exports.getPopularStocks = async (req, res) => {
     const popularStockSymbols = ['AAPL', 'TSLA', 'NFLX', 'AMZN', 'FB']
     try {
-        const currentPriceData = await getCurrentPrices(popularStockSymbols)
+        const currentPriceData = await getCurrentPrice(popularStockSymbols)
         const popularStockData = []
         const predictionsNeededFromAPI = []
         for (const stock in currentPriceData) {

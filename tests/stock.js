@@ -49,6 +49,7 @@ describe('Stocks endpoints', function () {
                 return done()
             })
     })
+
     it('should return the prediction of a stock ', function (done) {
         this.timeout(6000)
         chai.request(app)
@@ -62,6 +63,7 @@ describe('Stocks endpoints', function () {
                 return done()
             })
     })
+
     it('should return the current price of popular stocks', function (done) {
         this.timeout(40000)
         chai.request(app)

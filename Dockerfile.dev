@@ -20,4 +20,3 @@ HEALTHCHECK --interval=1m --timeout=5s --retries=2 \
 WORKDIR /usr/src/app
 
 CMD ["app.js"]
-
