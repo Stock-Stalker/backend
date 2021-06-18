@@ -1,23 +1,29 @@
 -include secrets.mk
+compose = docker-compose
+dev = -f docker-compose.dev.yml
+test = -f docker-compose.test.yml
 
-build :
-				TAG=$$(date +%m%d%H%M%S) docker compose -f docker-compose.dev.yml build --force-rm
+build:
+				TAG=$$(date +%m%d%H%M%S) && ${compose} ${dev} build --force-rm --no-cache
 
 start:
-				TAG=$$(date +%m%d%H%M%S) docker compose -f docker-compose.dev.yml up
+				TAG=$$(date +%m%d%H%M%S) && ${compose} ${dev} up
 
-stop :
-				docker compose -f docker-compose.dev.yml down --remove-orphans
+stop:
+				${compose} ${dev} down --remove-orphans
 
-debug :
-				TAG=$$(date +%m%d%H%M%S) docker compose -f docker-compose.dev.yml --verbose up
+debug:
+				TAG=$$(date +%m%d%H%M%S) ${compose} ${dev} --verbose up
 
-reload:
-				make stop
-				make start
+reload: stop start
 
-test :
-				TAG=$$(date +%m%d%H%M%S) docker compose -f docker-compose.test.yml up --abort-on-container-exit
+hard-reload: stop rmi start
+
+test:
+				TAG=$$(date +%m%d%H%M%S) ${compose} ${test} up --abort-on-container-exit
+
+stop-test:
+				${compose} ${test} down
 
 test-security:
 				snyk config set api=$(snyk_auth_token)
@@ -27,26 +33,21 @@ test-image-security:
 				snyk config set api=$(snyk_auth_token)
 				snyk container test node:lts-buster-slim --file=Dockerfile --fail-on=upgradable
 
-reload-test :
-				docker compose -f docker-compose.test.yml down
-				make test
+reload-test: stop-test test
 
-hard-reload-test :
-				docker compose -f docker-compose.test.yml down
-				make rmi
-				make test
+hard-reload-test: stop-test rmi test
 
 lint:
 				npm run lint
 
-rm :
+rm:
 				docker container prune -f
 				
 rm-all:
 				docker stop $$(docker ps -aq)
 				docker rm $$(docker ps -aq)
 
-rmi :
+rmi:
 				docker rmi backend_backend
 
 rmi-all:
