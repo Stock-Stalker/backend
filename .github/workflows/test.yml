@@ -38,14 +38,6 @@ jobs:
           STOCK_DATA_API: ${{ secrets.STOCK_DATA_API }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
-      - name: Docker Image Security Test with Snyk
-        uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_AUTH_TOKEN }}
-        with:
-          image: node:lts-buster-slim
-          args: --fail-on=upgradable
-
       - name: Security Test with Snyk
         uses: snyk/actions/node@master
         env:
