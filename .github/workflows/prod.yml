@@ -28,15 +28,15 @@ jobs:
         run: |
           npm run lint
 
-      - name: Test with Mocha & Chai
-        run: |
-          npm run coverage
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          PREDICTOR_API: ${{ secrets.PREDICTOR_API }}
-          ROBINHOOD_API: ${{ secrets.ROBINHOOD_API }}
-          STOCK_DATA_API: ${{ secrets.STOCK_DATA_API }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      # - name: Test with Mocha & Chai
+      #   run: |
+      #     npm run coverage
+      #   env:
+      #     MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      #     PREDICTOR_API: ${{ secrets.PREDICTOR_API }}
+      #     ROBINHOOD_API: ${{ secrets.ROBINHOOD_API }}
+      #     STOCK_DATA_API: ${{ secrets.STOCK_DATA_API }}
+      #     SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
       - name: Security Test with Snyk
         uses: snyk/actions/node@master
