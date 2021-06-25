@@ -63,6 +63,29 @@ describe('Authentication API endpoints', function () {
             })
     })
 
+    it('should fail to sign up a new user', function (done) {
+        chai.request(app)
+            .post('/api/user/signup')
+            .send({
+                username: process.env.USER3_USERNAME,
+                password: process.env.USER3_PASSWORD
+            })
+            .end(function (err, res) {
+                if (err) {
+                    done(err)
+                }
+                res.body.should.be.an('object')
+                res.body.token.should.be.a('string')
+                // check that user is actually inserted into database
+                User.findOne({ username: process.env.USER2_USERNAME }).then(
+                    function (user) {
+                        user.should.be.an('object')
+                        done()
+                    }
+                )
+            })
+    })
+
     it('should sign in a user', function (done) {
         chai.request(app)
             .post('/api/user/signin')
