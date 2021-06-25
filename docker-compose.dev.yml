@@ -21,7 +21,6 @@ services:
       - ./middleware:/usr/src/app/middleware
       - ./models:/usr/src/app/models
       - ./routes:/usr/src/app/routes
-      - ./tests:/usr/src/app/tests
       - ./utils:/usr/src/app/utils
       - ./app.js:/usr/src/app/app.js
     env_file:
