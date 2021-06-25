@@ -21,7 +21,8 @@ exports.signUpUser = async (req, res) => {
                 message: 'User already exists!'
             })
         }
-        const hashedPassword = await bcrypt.hash(password, process.env.SALT)
+        const salt = await bcrypt.genSalt(+process.env.SALT)
+        const hashedPassword = await bcrypt.hash(password, salt)
         user = new User({
             username: req.body.username,
             password: hashedPassword
